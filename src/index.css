@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-display: "Cinzel", "Playfair Display", Georgia, serif;
+  --font-sans: "Montserrat", Arial, system-ui, -apple-system, sans-serif;
+  
+  --color-cream: #FDFBF7;
+  --color-panel: #F7F4EE;
+  --color-border-prestige: #E5E1D8;
+  --color-gold: #C9A96E;
+  --color-gold-hover: #B8985D;
+  --color-gold-light: #E0CFA4;
+  --color-gold-dark: #A58448;
+  --color-charcoal: #222222;
+  --color-charcoal-light: #4A4A4A;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-sans);
+    background-color: #FDFBF7;
+    color: #222222;
+  }
+
+  h1, h2, h3, h4, .serif {
+    font-family: var(--font-serif);
+  }
+}
+
+/* Luxury / Prestige theme utility classes */
+.gold {
+  color: #C9A96E;
+}
+
+.bg-gold {
+  background-color: #C9A96E;
+}
+
+.border-gold {
+  border-color: #C9A96E;
+}
+
+.border-prestige {
+  border-color: #E5E1D8;
+}
+
+.letter-wide {
+  letter-spacing: 0.15em;
+}
+
+.letter-tight {
+  letter-spacing: -0.02em;
+}
+
+.text-xxs {
+  font-size: 10px;
+}
+
+.prestige-card {
+  background-color: #FFFFFF;
+  border: 1px solid #E5E1D8;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.prestige-card:hover {
+  box-shadow: 0 20px 35px -10px rgba(34, 34, 34, 0.08);
+}
+
