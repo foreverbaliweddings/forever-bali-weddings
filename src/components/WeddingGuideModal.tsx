@@ -33,7 +33,7 @@ export const WeddingGuideModal: React.FC<WeddingGuideModalProps> = ({
   const [email, setEmail] = useState('');
   const [whatsappNumber, setWhatsappNumber] = useState('');
   const [eventDate, setEventDate] = useState('');
-  const [guestCount, setGuestCount] = useState('50 Guests');
+  const [guestCount, setGuestCount] = useState('50-100');
 
   const [errors, setErrors] = useState<{
     name?: string;
@@ -139,16 +139,13 @@ export const WeddingGuideModal: React.FC<WeddingGuideModalProps> = ({
   };
 
   const getWhatsAppNurtureUrl = () => {
-    const formattedGuestCount = guestCount || '50 Guests';
+    const formattedGuestCount = guestCount || '50-100';
     const formattedDate = eventDate.trim() || '2026/2027';
     const formattedName = name.trim() || 'Valued Couple';
 
     // Format requested by user:
     // "Hello Forever Bali Weddings, I just requested the 2026 Wedding Guide for [Name]. I am planning a wedding for approximately [Guest Count] guests around [Event Date]."
-    const message =
-      lang === 'ID'
-        ? `Hello Forever Bali Weddings, I just requested the 2026 Wedding Guide for ${formattedName}. I am planning a wedding for approximately ${formattedGuestCount} around ${formattedDate}.`
-        : `Hello Forever Bali Weddings, I just requested the 2026 Wedding Guide for ${formattedName}. I am planning a wedding for approximately ${formattedGuestCount} around ${formattedDate}.`;
+    const message = `Hello Forever Bali Weddings, I just requested the 2026 Wedding Guide for ${formattedName}. I am planning a wedding for approximately ${formattedGuestCount} guests around ${formattedDate}.`;
 
     return `https://wa.me/${CONTACT_INFO.whatsappNumber}?text=${encodeURIComponent(message)}`;
   };
@@ -348,11 +345,11 @@ export const WeddingGuideModal: React.FC<WeddingGuideModalProps> = ({
                       onChange={(e) => setGuestCount(e.target.value)}
                       className="w-full bg-[#1A2421] border border-white/15 focus:border-[#C9A96E] rounded-xs py-2.5 pl-10 pr-4 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#C9A96E] transition-all cursor-pointer"
                     >
-                      <option value="2-15 Guests (Elopement)">2 - 15 Guests (Intimate Elopement)</option>
-                      <option value="20-50 Guests">20 - 50 Guests (Intimate Villa)</option>
-                      <option value="50-100 Guests">50 - 100 Guests (Medium Clifftop/Resort)</option>
-                      <option value="100-150 Guests">100 - 150 Guests (Grand Beachfront)</option>
-                      <option value="150+ Guests">150+ Guests (Royal Destination Event)</option>
+                      <option value="2-15">2 - 15 Guests (Intimate Elopement)</option>
+                      <option value="20-50">20 - 50 Guests (Intimate Villa)</option>
+                      <option value="50-100">50 - 100 Guests (Medium Clifftop/Resort)</option>
+                      <option value="100-150">100 - 150 Guests (Grand Beachfront)</option>
+                      <option value="150+">150+ Guests (Royal Destination Event)</option>
                     </select>
                   </div>
                 </div>
@@ -426,7 +423,7 @@ export const WeddingGuideModal: React.FC<WeddingGuideModalProps> = ({
                 </div>
 
                 <p className="text-xs text-neutral-300 font-mono bg-white/5 p-3 rounded-xs border border-white/10 leading-relaxed">
-                  "Hello Forever Bali Weddings, I just requested the 2026 Wedding Guide for {name}. I am planning a wedding for approximately {guestCount} around {eventDate}."
+                  "Hello Forever Bali Weddings, I just requested the 2026 Wedding Guide for {name}. I am planning a wedding for approximately {guestCount} guests around {eventDate}."
                 </p>
 
                 <a

@@ -1,40 +1,3 @@
-<<<<<<< HEAD
-import { Routes, Route } from 'react-router-dom';
-import Layout from './components/Layout';
-import HomePage from './pages/HomePage';
-import AboutPage from './pages/AboutPage';
-import PackagesPage from './pages/PackagesPage';
-import VenuesPage from './pages/VenuesPage';
-import GalleryPage from './pages/GalleryPage';
-import RealWeddingsPage from './pages/RealWeddingsPage';
-import ServicesPage from './pages/ServicesPage';
-import TestimonialsPage from './pages/TestimonialsPage';
-import BlogPage from './pages/BlogPage';
-import FaqPage from './pages/FaqPage';
-import ContactPage from './pages/ContactPage';
-import PrivacyPage from './pages/PrivacyPage';
-import TermsPage from './pages/TermsPage';
-
-export default function App() {
-  return (
-    <Routes>
-      <Route element={<Layout />}>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/packages" element={<PackagesPage />} />
-        <Route path="/venues" element={<VenuesPage />} />
-        <Route path="/gallery" element={<GalleryPage />} />
-        <Route path="/real-weddings" element={<RealWeddingsPage />} />
-        <Route path="/services" element={<ServicesPage />} />
-        <Route path="/testimonials" element={<TestimonialsPage />} />
-        <Route path="/blog" element={<BlogPage />} />
-        <Route path="/faq" element={<FaqPage />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="/privacy-policy" element={<PrivacyPage />} />
-        <Route path="/terms-and-conditions" element={<TermsPage />} />
-      </Route>
-    </Routes>
-=======
 import React, { useState } from 'react';
 import { Language } from './types';
 import { Header } from './components/Header';
@@ -57,11 +20,15 @@ import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { FloatingWhatsApp } from './components/FloatingWhatsApp';
 import { ConsultationModal } from './components/ConsultationModal';
+import { WeddingGuideModal } from './components/WeddingGuideModal';
+import { GuideFloatingBanner } from './components/GuideFloatingBanner';
+import VenueCatalog from './components/VenueCatalog';
 
 export default function App() {
   const [lang, setLang] = useState<Language>('ID');
   const [selectedPackage, setSelectedPackage] = useState<string>('');
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
+  const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
 
   const handleToggleLang = (newLang: Language) => {
     setLang(newLang);
@@ -75,6 +42,12 @@ export default function App() {
     setSelectedPackage('');
   };
 
+  const handleLockEstimate = (data: any) => {
+    const text = `Hello Forever Bali Weddings, I calculated a target budget estimate for ${data.guestCount} guests in ${data.region.toUpperCase()} (${data.tier.toUpperCase()} tier), estimated around $${data.estimatedUSD.toLocaleString()} USD. I would like to confirm venue availability.`;
+    const waUrl = `https://wa.me/6281370074777?text=${encodeURIComponent(text)}`;
+    window.open(waUrl, '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <div className="min-h-screen bg-[#FDFBF7] text-[#222222] font-sans selection:bg-[#C9A96E]/25 selection:text-[#222222]">
       {/* 1. Header & Navigation */}
@@ -82,6 +55,7 @@ export default function App() {
         lang={lang}
         onToggleLang={handleToggleLang}
         onOpenConsultation={() => setIsConsultationModalOpen(true)}
+        onOpenGuideModal={() => setIsGuideModalOpen(true)}
       />
 
       {/* Page 1: Hero Section */}
@@ -99,8 +73,11 @@ export default function App() {
       {/* Interactive Venues & Locations Section */}
       <VenuesSection lang={lang} />
 
+      {/* Curated Off-Market Private Sanctuaries Catalog */}
+      <VenueCatalog lang={lang} />
+
       {/* Interactive Wedding Investment Estimator */}
-      <BudgetEstimatorSection lang={lang} />
+      <BudgetEstimatorSection lang={lang} onLockEstimate={handleLockEstimate} />
 
       {/* Page 6: Cultural Reverence - Nusantara Heritage */}
       <NusantaraHeritageSection lang={lang} />
@@ -151,6 +128,19 @@ export default function App() {
       {/* Floating Instant WhatsApp Button */}
       <FloatingWhatsApp lang={lang} />
 
+      {/* Floating Subtle Wedding Guide Banner */}
+      <GuideFloatingBanner
+        lang={lang}
+        onOpenGuideModal={() => setIsGuideModalOpen(true)}
+      />
+
+      {/* 2026 Bali Luxury Destination Wedding Guide Modal */}
+      <WeddingGuideModal
+        isOpen={isGuideModalOpen}
+        onClose={() => setIsGuideModalOpen(false)}
+        lang={lang}
+      />
+
       {/* Consultation Booking Modal */}
       <ConsultationModal
         isOpen={isConsultationModalOpen}
@@ -158,6 +148,5 @@ export default function App() {
         lang={lang}
       />
     </div>
->>>>>>> 4404c756fcd28fd93b2537d150df3e179057717b
   );
 }

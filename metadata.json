@@ -1,6 +1,8 @@
 {
-  "name": "Forever Bali Wedding",
+  "name": "Remix Forever Bali Wedding",
   "description": "Bespoke destination wedding planner in Denpasar, Bali. Specializing in intimate luxury villa weddings, cliffside ceremonies, and authentic Balinese blessings.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }
