@@ -186,4 +186,17 @@ export interface AnniversaryOffering {
   imageUrl: string;
 }
 
+export interface TeamProfile {
+  id: string;
+  nameId: string;
+  nameEn: string;
+  roleId: string;
+  roleEn: string;
+  bioId: string;
+  bioEn: string;
+  image: string;
+  specialtyId: string;
+  specialtyEn: string;
+}
+
 

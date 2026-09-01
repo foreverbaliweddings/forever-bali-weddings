@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { TeamProfiles } from '../components/TeamProfiles';
 
 const pillars = [
   'Over 23 years of experience planning destination weddings across Bali',
@@ -79,6 +80,9 @@ export default function AboutPage() {
           ))}
         </div>
       </section>
+
+      {/* Team Profiles Section */}
+      <TeamProfiles lang="EN" />
 
       <section className="mx-auto max-w-7xl px-6 py-8 lg:px-10">
         <div className="flex flex-col gap-3 text-center">

@@ -11,6 +11,7 @@ import {
   VenueItem,
   GuestConciergeService,
   AnniversaryOffering,
+  TeamProfile,
 } from '../types';
 
 export const CONTACT_INFO = {
@@ -943,4 +944,92 @@ export const ANNIVERSARY_OFFERINGS: AnniversaryOffering[] = [
       'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1000&q=80',
   },
 ];
+
+export const TEAM_PROFILES: TeamProfile[] = [
+  {
+    id: 'founder-director',
+    nameId: 'Direktur Eksekutif & Pendiri',
+    nameEn: 'Executive Director & Founder',
+    roleId: 'Visioner Kreatif & Pendiri Studio',
+    roleEn: 'Creative Visionary & Studio Founder',
+    bioId:
+      'Dengan lebih dari 23 tahun pengalaman merencanakan pernikahan mewah di Bali, Pendiri Forever Bali Weddings telah menciptakan standar baru dalam perencanaan pernikahan destination. Passion-nya adalah mentransformasi imajinasi setiap pasangan menjadi perayaan yang tak terlupakan.',
+    bioEn:
+      'With over 23 years of experience orchestrating luxury destination weddings across Bali, our Founder has set a new standard in refined wedding artistry. Her passion is transforming each couple\'s vision into an elegantly executed, deeply personal celebration.',
+    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=500&q=80',
+    specialtyId: 'Strategi Kreatif, Kurasi Venue & Eksekusi Mewah',
+    specialtyEn: 'Creative Strategy, Venue Curation & Luxury Execution',
+  },
+  {
+    id: 'event-director-1',
+    nameId: 'Direktur Acara Utama',
+    nameEn: 'Lead Event Director',
+    roleId: 'Direktur Koordinasi & Produksi Acara',
+    roleEn: 'Event Coordination & Production Director',
+    bioId:
+      'Pemimpin tim logistik dengan keahlian mengelola acara skala besar hingga intimate ceremonies. Dedikasi-nya terhadap detail dan komunikasi seamless memastikan setiap momen berjalan dengan sempurna di hari besar Anda.',
+    bioEn:
+      'A seasoned logistics leader with expertise managing complex productions from intimate vow renewals to grand 150+ guest celebrations. Her meticulous coordination ensures flawless execution and total peace of mind.',
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=500&q=80',
+    specialtyId: 'Manajemen Logistik, Koordinasi Hari-H & Vendor Relations',
+    specialtyEn: 'Logistics Management, Day-of Coordination & Vendor Relations',
+  },
+  {
+    id: 'floral-design-director',
+    nameId: 'Direktur Desain Floral',
+    nameEn: 'Floral Design Director',
+    roleId: 'Kepala Desain Botani & Styling Artistik',
+    roleEn: 'Botanical Design & Artistic Styling Lead',
+    bioId:
+      'Seniman floral dengan visi untuk menciptakan instalasi botanical yang memukau. Spesialisasi-nya dalam merangkai harmoni warna tropis dan tekstur mewah mengubah setiap venue menjadi karya seni yang hidup dan bercerita.',
+    bioEn:
+      'A botanical artist with a refined eye for transforming tropical venues into living works of art. Her mastery of color harmony, spatial composition, and artisanal craftsmanship creates unforgettable floral installations.',
+    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=500&q=80',
+    specialtyId: 'Desain Floral Premium, Instalasi Botani & Styling Tabel',
+    specialtyEn: 'Premium Floral Design, Botanical Installations & Tablescape Styling',
+  },
+  {
+    id: 'photography-director',
+    nameId: 'Direktur Fotografi & Sinematik',
+    nameEn: 'Photography & Cinematography Director',
+    roleId: 'Kepala Dokumentasi Visual & Editorial',
+    roleEn: 'Visual Documentation & Editorial Lead',
+    bioId:
+      'Fotografer pemenang penghargaan internasional yang menangkap emosi dan keindahan setiap momen. Perspektif editorial-nya mengubah kenangan pernikahan Anda menjadi koleksi timeless yang bercerita tentang cinta, keanggunan, dan kemewahan.',
+    bioEn:
+      'An award-winning photographer whose editorial eye captures the emotion, light, and artistry of your celebration. Her work transforms fleeting moments into timeless visual stories that honor elegance and love.',
+    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=500&q=80',
+    specialtyId: 'Fotografi Editorial, Sinematik 4K & Dokumentasi Luxury',
+    specialtyEn: 'Editorial Photography, 4K Cinematography & Luxury Documentation',
+  },
+  {
+    id: 'concierge-director',
+    nameId: 'Direktur Layanan Concierge',
+    nameEn: 'Concierge Services Director',
+    roleId: 'Kepala Layanan VIP & Guest Experience',
+    roleEn: 'VIP Services & Guest Experience Lead',
+    bioId:
+      'Ahli dalam menciptakan pengalaman tamu yang tak terlupakan dan seamless. Keahlian-nya dalam manajemen hospitality internasional dan perhatian terhadap detail memastikan setiap tamu Anda merasakan kemewahan dan kehangatan tulus.',
+    bioEn:
+      'An international hospitality expert dedicated to crafting seamless, luxurious guest experiences. Her mastery of cultural nuance, personalized service, and attention to detail ensures every guest feels warmly welcomed and beautifully cared for.',
+    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=500&q=80',
+    specialtyId: 'Hospitality Mewah, Manajemen Tamu & Layanan Concierge Premium',
+    specialtyEn: 'Luxury Hospitality, Guest Management & Premium Concierge',
+  },
+  {
+    id: 'design-strategist',
+    nameId: 'Strategis Desain & Kurasi',
+    nameEn: 'Design Strategist & Creative Curator',
+    roleId: 'Kepala Strategi Kreatif & Kurasi Aesthetic',
+    roleEn: 'Creative Strategy & Aesthetic Curation Lead',
+    bioId:
+      'Visioner desain yang mengintegrasikan estetika modern minimalism dengan kemewahan tropis. Pendekatan-nya yang thoughtful terhadap palet warna, arsitektur ruang, dan narasi visual menciptakan perayaan yang kohesif, indah, dan berkesan.',
+    bioEn:
+      'A design strategist who seamlessly weaves modern minimalism with tropical luxury. Her thoughtful curation of color, spatial flow, and visual narrative creates cohesive, stunning celebrations that feel unmistakably refined.',
+    image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=500&q=80',
+    specialtyId: 'Strategi Desain, Kurasi Aesthetic & Arsitektur Ruang',
+    specialtyEn: 'Design Strategy, Aesthetic Curation & Spatial Architecture',
+  },
+];
+
 
