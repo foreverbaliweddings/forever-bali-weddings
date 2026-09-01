@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { Language } from '../types';
 import { CONTACT_INFO } from '../data/weddingData';
+import { AriaFooterConcierge } from './AriaFooterConcierge';
 
 interface FooterProps {
   lang: Language;
@@ -128,6 +129,15 @@ export const Footer: React.FC<FooterProps> = ({ lang }) => {
               </li>
               <li>
                 <a
+                  href="#team"
+                  onClick={(e) => scrollToSection(e, 'team')}
+                  className="hover:text-[#C9A96E] transition-colors"
+                >
+                  {lang === 'ID' ? 'Tim Eksekutif & Manajemen' : 'Executive Leadership'}
+                </a>
+              </li>
+              <li>
+                <a
                   href="#packages"
                   onClick={(e) => scrollToSection(e, 'packages')}
                   className="hover:text-[#C9A96E] transition-colors"
@@ -151,6 +161,70 @@ export const Footer: React.FC<FooterProps> = ({ lang }) => {
                   className="hover:text-[#C9A96E] transition-colors"
                 >
                   {lang === 'ID' ? 'Ulasan Pasangan' : 'Love Stories & Reviews'}
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#currency-calculator"
+                  onClick={(e) => scrollToSection(e, 'currency-calculator')}
+                  className="hover:text-[#C9A96E] transition-colors"
+                >
+                  {lang === 'ID' ? 'Kalkulator Multi-Kurs' : 'Currency Calculator'}
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#cost-transparency"
+                  onClick={(e) => scrollToSection(e, 'cost-transparency')}
+                  className="hover:text-[#C9A96E] transition-colors"
+                >
+                  {lang === 'ID' ? 'Transparansi Biaya (Cost Engine)' : 'Cost Transparency Engine'}
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#guest-rsvp"
+                  onClick={(e) => scrollToSection(e, 'guest-rsvp')}
+                  className="hover:text-[#C9A96E] transition-colors"
+                >
+                  {lang === 'ID' ? 'Konfirmasi Kehadiran Tamu (RSVP)' : 'VVIP Guest RSVP'}
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#itinerary-builder"
+                  onClick={(e) => scrollToSection(e, 'itinerary-builder')}
+                  className="hover:text-[#C9A96E] transition-colors"
+                >
+                  {lang === 'ID' ? 'Perencana Rundown (3-Day Itinerary)' : '3-Day Itinerary Builder'}
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#moodboard-exporter"
+                  onClick={(e) => scrollToSection(e, 'moodboard-exporter')}
+                  className="hover:text-[#C9A96E] transition-colors"
+                >
+                  {lang === 'ID' ? 'Ekspor Moodboard (VVIP Portfolio)' : 'VVIP Moodboard Exporter'}
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#editorial-journal"
+                  onClick={(e) => scrollToSection(e, 'editorial-journal')}
+                  className="hover:text-[#C9A96E] transition-colors"
+                >
+                  {lang === 'ID' ? 'Jurnal Editorial' : 'Editorial Journal'}
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#footer-aria-concierge-section"
+                  onClick={(e) => scrollToSection(e, 'footer-aria-concierge-section')}
+                  className="hover:text-[#C9A96E] transition-colors flex items-center gap-1.5"
+                >
+                  <Sparkles className="w-3 h-3 text-[#C9A96E]" />
+                  <span>{lang === 'ID' ? 'Aria AI Concierge Desk' : 'Aria AI Concierge Desk'}</span>
                 </a>
               </li>
               <li>
@@ -211,6 +285,11 @@ export const Footer: React.FC<FooterProps> = ({ lang }) => {
             </div>
           </div>
 
+        </div>
+
+        {/* Aria AI Planning Engine - Permanent Footer Concierge Section */}
+        <div id="footer-aria-concierge-section" className="py-12 border-b border-white/10">
+          <AriaFooterConcierge lang={lang} />
         </div>
 
         {/* Bottom Bar: Copyright */}

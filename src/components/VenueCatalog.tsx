@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MapPin, Users, Clock, DollarSign, MessageCircle, ArrowUpRight, Sparkles } from 'lucide-react';
+import { MapPin, Users, Clock, DollarSign, MessageCircle, ArrowUpRight, Sparkles, ArrowLeft } from 'lucide-react';
 import { Language } from '../types';
 
 export interface VenueCatalogItem {
@@ -74,6 +74,33 @@ export default function VenueCatalog({ lang = 'EN' }: VenueCatalogProps) {
       <div className="absolute -bottom-24 left-10 w-96 h-96 bg-[#C9A96E]/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-6xl mx-auto relative z-10">
+        {/* Dynamic Back Navigation & Category Controls */}
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-8 pb-3 border-b border-white/10">
+          <a
+            id="btn-back-to-home-from-venues"
+            href="#home"
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-[#1A2421] hover:bg-[#202d29] border border-white/10 hover:border-[#C9A96E]/50 text-xs text-[#D4CDC3] hover:text-[#C9A96E] transition-all duration-300 group shadow-sm"
+          >
+            <ArrowLeft className="w-3.5 h-3.5 text-[#C9A96E] group-hover:-translate-x-1 transition-transform" />
+            <span>
+              {lang === 'ID'
+                ? '← Kembali ke Beranda & Direktori Utama'
+                : '← Back to Home & Main Overview'}
+            </span>
+          </a>
+
+          {selectedRegion !== 'All' && (
+            <button
+              type="button"
+              id="btn-back-to-all-venues"
+              onClick={() => setSelectedRegion('All')}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#C9A96E]/10 border border-[#C9A96E]/30 text-[#C9A96E] text-xs font-medium hover:bg-[#C9A96E] hover:text-[#111816] transition-colors"
+            >
+              <span>{lang === 'ID' ? '← Kembali ke Semua Venue' : '← Back to All Venues'}</span>
+            </button>
+          )}
+        </div>
+
         {/* Section Header */}
         <div className="text-center mb-10 sm:mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#C9A96E]/10 border border-[#C9A96E]/30 rounded-xs mb-3">

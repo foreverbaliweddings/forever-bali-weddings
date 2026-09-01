@@ -11,7 +11,17 @@ import {
   VenueItem,
   GuestConciergeService,
   AnniversaryOffering,
+  CuratedPartner,
+  CuratedPartnerLook,
+  TeamMember,
 } from '../types';
+
+import ayuHairWaves from '../assets/images/ayu_bridal_hollywood_waves_1788104889282.jpg';
+import ayuHairTiara from '../assets/images/ayu_bridal_crystal_tiara_1788104908807.jpg';
+import ayuHairKebaya from '../assets/images/ayu_bridal_kebaya_gold_pin_1788104927741.jpg';
+import ayuHairMaroon from '../assets/images/ayu_bridal_maroon_floral_bun_1788104948434.jpg';
+import ayuHairPonytail from '../assets/images/ayu_bridal_glam_ponytail_1788104966412.jpg';
+import ayuHairSideSwept from '../assets/images/ayu_bridal_sideswept_waves_1788104981577.jpg';
 
 export const CONTACT_INFO = {
   studioName: 'Forever Bali Weddings Studio',
@@ -943,4 +953,423 @@ export const ANNIVERSARY_OFFERINGS: AnniversaryOffering[] = [
       'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1000&q=80',
   },
 ];
+
+export const CURATED_PARTNERS: CuratedPartner[] = [
+  {
+    id: 'cosma-florist',
+    name: 'Cosma Florist',
+    category: 'floral',
+    roleId: 'Spesialis Penataan Bunga & Dekorasi Botani Mewah',
+    roleEn: 'Haute Botanical Architecture & Luxury Floral Design',
+    badgeId: 'Official Floral Partner',
+    badgeEn: 'Official Floral Partner',
+    instagramHandle: '@cosma.florist',
+    instagramUrl: 'https://www.instagram.com/cosma.florist',
+    taglineId: 'Instalasi Bunga Botani Standar Internasional untuk Pernikahan Mewah Bali',
+    taglineEn: 'International-Standard Haute Floral Installations & Botanical Architecture',
+    descriptionId:
+      'Cosma Florist adalah artisan floristry prestisius yang mengkhususkan diri dalam arsitektur botani skala besar, instalasi altar cliffside dramatis, lengkungan bunga organik melayang, dan table-scape banquet ultra-mewah. Mengombinasikan bunga tropis eksotis Nusantara dengan flora impor pilihan dari Belanda dan Jepang.',
+    descriptionEn:
+      'Cosma Florist is an internationally acclaimed floral artisan studio specializing in monumental botanical architecture, dramatic cliffside ceremony altars, floating organic arches, and ultra-luxurious banquet table-scapes. Seamlessly blending rare Indonesian tropical blooms with premium Dutch and Japanese seasonal imports.',
+    specialtyId: 'Altar Bunga Cliffside & Arsitektur Botani Melayang',
+    specialtyEn: 'Cliffside Altar Sculptures & Floating Botanical Art',
+    featuresId: [
+      'Struktur instalasi altar bunga 360° tahan angin tebing & terik tropis',
+      'Kurasi kombinasi bunga impor premium (Peonies, Dutch Roses, Phalaenopsis) & flora endemik Bali',
+      'Desain buket pengantin bespoke yang disesuaikan dengan gaun & proporsi postur',
+      'Transisi dekorasi cerdas dari seremoni akad/pemberkatan ke resepsi makan malam',
+      'Sertifikasi floris berkelanjutan & penggunaan teknik no-floral-foam ramah lingkungan',
+    ],
+    featuresEn: [
+      'Wind & tropical humidity-resistant 360° architectural floral structures',
+      'Curation of premier imported blooms (Peonies, Dutch Garden Roses, Phalaenopsis) with Bali native flora',
+      'Bespoke bridal bouquet architecture proportioned to couture gowns & silhouette',
+      'Flawless live repurposing protocol from afternoon ceremony to evening gala banquet',
+      'Sustainable floristry certification with eco-conscious no-floral-foam hydration techniques',
+    ],
+    imageUrl:
+      'https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&w=1200&q=80',
+    galleryImages: [
+      'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1545232979-fbf675496464?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1469371670807-013ccf25f16a?auto=format&fit=crop&w=800&q=80',
+    ],
+    leadTimeId: 'Reservasi Disarankan 4–9 Bulan Sebelum Acara',
+    leadTimeEn: 'Recommended Booking 4–9 Months in Advance',
+    pricingIndicator: '$$$$',
+    isOfficialPartner: true,
+  },
+  {
+    id: 'ayu-hairstylist',
+    name: 'Ayu Hairstylist',
+    category: 'hair-styling',
+    roleId: 'Penata Rambut Profesional Kelas Atas untuk Pengantin VVIP',
+    roleEn: 'Elite High-Fashion Bridal Hair Stylist for VVIP Brides',
+    badgeId: 'Official VVIP Hair Partner',
+    badgeEn: 'Official VVIP Hair Partner',
+    instagramHandle: '@ayuhairstylist',
+    instagramUrl: 'https://www.instagram.com/ayuhairstylist',
+    taglineId: 'Sentuhan Rambut Mahakarya Tahan Angin Laut & Kelembapan Tropis',
+    taglineEn: 'Masterpiece Ocean-Breeze Proof & Humidity-Resistant Bridal Styling',
+    descriptionId:
+      'Ayu Hairstylist adalah master hair artisan terkemuka di Bali yang dipercaya oleh pengantin selebritas, bangsawan, dan klien internasional VVIP. Dikenal dengan kepiawaian menciptakan gaya rambut editorial abadi—dari gelombang Hollywood bertekstur lembut, sanggul modern terstruktur, hingga penataan mahkota bunga alami yang tahan cuaca tropis sepanjang hari.',
+    descriptionEn:
+      'Ayu Hairstylist is Bali’s celebrated master hair artisan trusted by celebrity couples, royal families, and international VVIP brides. Renowned for mastering timeless editorial aesthetics—from luminous Hollywood waves and effortless textured chignons to organic floral-woven updos engineered to withstand tropical ocean breezes all day and night.',
+    specialtyId: 'Gaya Rambut Pengantin VVIP & Ketahanan Tropis 16 Jam',
+    specialtyEn: 'VVIP Couture Bridal Hair & 16-Hour Tropical Longevity',
+    featuresId: [
+      'Teknik styling anti-kelembapan khusus untuk iklim tropis & angin tebing Uluwatu',
+      'Sesi konsultasi privat & Hair Trial menyeluruh pra-acara (pre-wedding preview)',
+      'Aplikasi presisi tiara couture, veil katedral panjang, dan hiasan flora segar',
+      'Layanan pendampingan on-site touchup eksklusif dari seremoni hingga after-party',
+      'Tim penata rambut terkoordinasi untuk keluarga inti dan bridesmaid VVIP',
+    ],
+    featuresEn: [
+      'Proprietary humidity-barrier techniques perfected for tropical climates and Uluwatu sea breezes',
+      'Private pre-event consultation & comprehensive bridal hair trial preview session',
+      'Precision anchor styling for cathedral-length veils, couture headpieces, and organic florals',
+      'Dedicated on-site touchup director escorting the bride from vows to final after-party dances',
+      'Synchronized styling entourage for mothers, VIP families, and bridal parties',
+    ],
+    imageUrl: ayuHairWaves,
+    galleryImages: [
+      ayuHairWaves,
+      ayuHairTiara,
+      ayuHairKebaya,
+      ayuHairMaroon,
+      ayuHairPonytail,
+      ayuHairSideSwept,
+    ],
+    portfolioLooks: [
+      {
+        titleId: 'Cascading Hollywood Waves',
+        titleEn: 'Cascading Hollywood Waves',
+        styleId: 'Gelombang Hollywood ikonis bertekstur bervolume mewah, diperkuat formula anti-angin laut tropis.',
+        styleEn: 'Iconic textured voluminous Hollywood waves engineered with tropical ocean-breeze barrier.',
+        imageUrl: ayuHairWaves,
+      },
+      {
+        titleId: 'Royal Crystal Tiara & Sleek Bun',
+        titleEn: 'Royal Crystal Tiara & Sleek Bun',
+        styleId: 'Sanggul pengantin modern minimalis dengan tata letak tiara kristal presisi untuk gaun couture.',
+        styleEn: 'Modern minimalist bridal updo with precision crystal tiara anchoring for couture gowns.',
+        imageUrl: ayuHairTiara,
+      },
+      {
+        titleId: 'Bespoke Nusantara Kebaya & Gold Pin',
+        titleEn: 'Bespoke Nusantara Kebaya & Gold Pin',
+        styleId: 'Sanggul anggun berhiaskan cunduk mentul flora emas Bali berpadu kebaya bordir pastel mewah.',
+        styleEn: 'Graceful low chignon adorned with Balinese gold floral pins harmonized with pastel lace kebaya.',
+        imageUrl: ayuHairKebaya,
+      },
+      {
+        titleId: 'Imperial Maroon & Ruby Floral Bun',
+        titleEn: 'Imperial Maroon & Ruby Floral Bun',
+        styleId: 'Penataan belah samping klasik dengan aksen tusuk konde bunga kencana merah delima untuk tea ceremony / cheongsam.',
+        styleEn: 'Classic side-parted updo with imperial ruby-red and gold floral ornaments for tea ceremony / cheongsam.',
+        imageUrl: ayuHairMaroon,
+      },
+      {
+        titleId: 'Textured Glamour Ponytail & Pearl',
+        titleEn: 'Textured Glamour Ponytail & Pearl',
+        styleId: 'Kuncir kuda bertekstur modern dengan gelombang halus, aksen kalung mutiara, dan daya tahan 16 jam.',
+        styleEn: 'Modern textured structured ponytail with soft glossy waves, pearl accents, and 16-hour hold.',
+        imageUrl: ayuHairPonytail,
+      },
+      {
+        titleId: 'Luminous Side-Swept Waves',
+        titleEn: 'Luminous Side-Swept Waves',
+        styleId: 'Rambut terurai samping bervolume dramatis untuk gaun bustier/strapless dan riasan mata dramatis.',
+        styleEn: 'Dramatic side-swept voluminous waves cascading over one shoulder for strapless bridal gowns.',
+        imageUrl: ayuHairSideSwept,
+      },
+    ],
+    leadTimeId: 'Reservasi Terbatas Maksimal 2 Pernikahan per Akhir Pekan',
+    leadTimeEn: 'Strict Limit of 2 Weddings per Weekend',
+    pricingIndicator: '$$$$',
+    isOfficialPartner: true,
+  },
+  {
+    id: 'lumiere-cinematics',
+    name: 'Lumière Cinematics Bali',
+    category: 'cinematography',
+    roleId: 'Master Sinematografi 4K HDR & Foto Editorial Analog / Digital',
+    roleEn: 'Master 4K HDR Cinematic Wedding Film & Editorial Imagery',
+    badgeId: 'Curated Artisan',
+    badgeEn: 'Curated Artisan',
+    instagramHandle: '@lumiere.cinematics',
+    instagramUrl: 'https://www.instagram.com/foreverbaliwedding/',
+    taglineId: 'Narasi Sinematik Emosional Bertaraf Layar Lebar Berwarna Alami Bali',
+    taglineEn: 'Emotional Large-Format Cinematic Storytelling with Bali’s Golden Light',
+    descriptionId:
+      'Kolektif videografer dan fotografer editorial peraih penghargaan internasional yang mengabadikan esensi emosi dan keindahan tanpa manipulasi berlebihan. Menggunakan kamera cinema Arri/RED, drone bersertifikasi pilot FPV, dan tone warna hangat alami yang abadi.',
+    descriptionEn:
+      'An award-winning editorial cinema collective capturing raw emotion and timeless luxury aesthetics. Utilizing cinematic 4K HDR capture, licensed FPV cliffside drone flights, and bespoke filmic color grading that endures for generations.',
+    specialtyId: 'Film Sinematik Layar Lebar & Same-Day Edit Preview',
+    specialtyEn: 'Feature-Length Cinematic Film & Same-Day Edit Gala Reveal',
+    featuresId: [
+      'Pengambilan gambar sinematik multi-kamera 4K HDR dengan sutradara film berdedikasi',
+      'Penerbangan drone sinematik tebing pantai & lanskap hutan oleh pilot berlisensi',
+      'Same-Day Edit (SDE) teaser siap ditayangkan pada resepsi makan malam',
+      'Dokumentasi audio vokal janji suci berkejernihan tinggi tanpa gangguan angin tebing',
+      'Pengiriman kotak arsip eksklusif kayu jati dengan master film resolusi penuh',
+    ],
+    featuresEn: [
+      'Multi-camera 4K HDR master cinematography directed by seasoned filmmakers',
+      'Licensed cliffside aerial and FPV drone capture framing Bali’s dramatic topography',
+      'Signature Same-Day Edit (SDE) teaser for gala dinner premiere',
+      'Studio-grade audio engineering for vow clarity shielded from ocean winds',
+      'Handcrafted Balinese teak presentation keepsake box with raw archival masters',
+    ],
+    imageUrl:
+      'https://images.unsplash.com/photo-1537633552985-df8429e8048b?auto=format&fit=crop&w=1200&q=80',
+    galleryImages: [
+      'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80',
+    ],
+    leadTimeId: 'Reservasi 6–12 Bulan Sebelum Tanggal Pernikahan',
+    leadTimeEn: 'Bookings 6–12 Months in Advance',
+    pricingIndicator: '$$$$',
+    isOfficialPartner: false,
+  },
+  {
+    id: 'palate-republique',
+    name: 'Palate République Gastronomie',
+    category: 'gastronomy',
+    roleId: 'Kurasi Jamuan Kuliner Bintang Michelin & Mixologi Nusantara',
+    roleEn: 'Michelin-Caliber Private Banquet Catering & Nusantara Mixology',
+    badgeId: 'Curated Artisan',
+    badgeEn: 'Curated Artisan',
+    instagramHandle: '@palaterepublique.bali',
+    instagramUrl: 'https://www.instagram.com/foreverbaliwedding/',
+    taglineId: 'Petualangan Gastronomi Haute-Cuisine Paduan Prancis-Indonesia Kontemporer',
+    taglineEn: 'Haute-Cuisine Gastronomic Journeys Blending French-Indonesian Flavors',
+    descriptionId:
+      'Dapur privat pimpinan Executive Chef bersertifikasi internasional yang menghadirkan jamuan makan malam 5-course hingga 7-course spektakuler di villa tebing atau tepi pantai privat. Dilengkapi dengan koktail khas rempah Nusantara dan pairing anggur vintage.',
+    descriptionEn:
+      'An elite culinary brigade led by internationally acclaimed executive chefs orchestrating 5-to-7 course tasting menus for private cliff and beachfront estates, accented with artisanal Nusantara spice mixology and vintage sommelier wine pairings.',
+    specialtyId: 'Jamuan Multi-Course Bintang 5 & Bar Mixologi Eksklusif',
+    specialtyEn: '5-Star Multi-Course Tasting Menus & Bespoke Cocktails',
+    featuresId: [
+      'Menu tasting 5–7 course yang disesuaikan penuh dengan preferensi alergi & diet tamu',
+      'Bar mixologi dengan bahan rempah botani organik Bali & spirits premium internasional',
+      'Peralatan saji porselen custom, kristal glassware, dan sendok perak berlapis emas',
+      'Layanan white-glove butler service berstandar perhotelan bintang lima',
+      'Sesi Food & Wine Tasting privat sebelum hari pernikahan',
+    ],
+    featuresEn: [
+      'Customized 5–7 course tasting journey accommodating all global dietary nuances',
+      'Craft mixology bar featuring organic Balinese botanical infusions & top-shelf spirits',
+      'Fine bone china, Riedel crystal glassware, and gold-accented cutlery table styling',
+      'Five-star hospitality white-glove butler service throughout the banquet',
+      'Private pre-wedding food and sommelier wine tasting session',
+    ],
+    imageUrl:
+      'https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=1200&q=80',
+    galleryImages: [
+      'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80',
+    ],
+    leadTimeId: 'Minimal 3 Bulan untuk Penyesuaian Menu & Sesi Food Tasting',
+    leadTimeEn: 'Minimum 3 Months for Menu Customization & Tasting',
+    pricingIndicator: '$$$$$',
+    isOfficialPartner: false,
+  },
+];
+
+export const INITIAL_TEAM_MEMBERS: TeamMember[] = [
+  {
+    id: 'luh-putu-sariani',
+    name: 'Luh Putu Sariani',
+    roleId: 'Founder & Principal Planner',
+    roleEn: 'Founder & Principal Planner',
+    category: 'executive',
+    badgeId: 'Pendiri & Perancang Utama',
+    badgeEn: 'Founder & Principal Director',
+    bioId:
+      'Pendiri dan perancang utama di balik Forever Bali Weddings dengan pengalaman lebih dari satu dekade mewujudkan pernikahan impian pasangan internasional. Berdedikasi pada keselarasan estetika minimalis tropis modern, kemitraan villa privat off-market, dan manajemen berstandar internasional.',
+    bioEn:
+      'Founder and principal visionary behind Forever Bali Weddings with over a decade of orchestrating bespoke nuptials for global couples. Dedicated to modern tropical minimalism, off-market private sanctuary alliances, and world-class managerial precision.',
+    quoteId: 'Kemewahan sejati tercipta dalam ketenangan pikiran dan detail yang tak kasat mata.',
+    quoteEn: 'True quiet luxury lives in seamless peace of mind and unseen precision.',
+    imageUrl:
+      'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=900&q=80',
+    specialtiesId: [
+      'Haute Wedding Architecture',
+      'VIP Client Relations & Diplomatic Protocols',
+      'Exclusive Clifftop Estate Buyouts',
+      'Bespoke Cultural Ceremonies',
+    ],
+    specialtiesEn: [
+      'Haute Wedding Architecture',
+      'VIP Client Relations & Diplomatic Protocols',
+      'Exclusive Clifftop Estate Buyouts',
+      'Bespoke Cultural Ceremonies',
+    ],
+    experienceYears: 12,
+    instagram: 'https://instagram.com/foreverbaliwedding',
+    email: 'sariani@foreverbaliweddings.com',
+  },
+  {
+    id: 'gede-arsel-aria-chrisna',
+    name: 'Gede Arsel Aria Chrisna',
+    roleId: 'General Manager',
+    roleEn: 'General Manager',
+    category: 'executive',
+    badgeId: 'Direksi Manajemen & Operasional',
+    badgeEn: 'Executive Operations & Governance',
+    bioId:
+      'Memimpin seluruh operasi strategis, kepatuhan perizinan Banjar adat, hubungan kemitraan perhotelan bintang 5, serta tata kelola keuangan multi-mata uang untuk memastikan eksekusi setiap perayaan berjalan dengan presisi tanpa celah.',
+    bioEn:
+      'Directs high-stakes studio operations, village Banjar governance compliance, luxury 5-star estate alliances, and multi-currency fiscal structuring to ensure every celebration is executed with flawless operational rigor.',
+    quoteId: 'Ketepatan logistik dan kehormatan budaya lokal adalah fondasi pesta yang abadi.',
+    quoteEn: 'Logistical precision and cultural reverence form the bedrock of timeless celebrations.',
+    imageUrl:
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=900&q=80',
+    specialtiesId: [
+      'High-Stakes Logistics & Risk Management',
+      'Banjar Village Law & Legal Permitting',
+      'Multi-Currency Fiscal Governance',
+      'VIP Aviation & Guest Escort Systems',
+    ],
+    specialtiesEn: [
+      'High-Stakes Logistics & Risk Management',
+      'Banjar Village Law & Legal Permitting',
+      'Multi-Currency Fiscal Governance',
+      'VIP Aviation & Guest Escort Systems',
+    ],
+    experienceYears: 10,
+    instagram: 'https://instagram.com/foreverbaliwedding',
+    email: 'arsel@foreverbaliweddings.com',
+  },
+  {
+    id: 'jakub-siahan',
+    name: 'Jakub Siahan',
+    roleId: 'Lead Photographer & Videographer',
+    roleEn: 'Lead Photographer & Videographer',
+    category: 'creative',
+    badgeId: 'Master Sinematografi & Visual',
+    badgeEn: 'Master Visual Storyteller',
+    bioId:
+      'Master visual dan sinematografer peraih penghargaan dengan gaya editorial abadi dan penguasaan teknik cahaya alami Bali (Golden Hour). Mengabadikan esensi emosi murni dalam resolusi 4K HDR tanpa manipulasi berlebihan.',
+    bioEn:
+      'Award-winning master photographer and lead cinematographer celebrated for timeless editorial aesthetics and capturing Bali’s magical golden light in pristine 4K HDR without artificial distortion.',
+    quoteId: 'Cahaya keemasan Bali dan tatapan tulus adalah puisi visual yang tak lekang oleh waktu.',
+    quoteEn: 'Bali’s golden light and raw glances are timeless visual poetry.',
+    imageUrl:
+      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80',
+    specialtiesId: [
+      '4K HDR Large-Format Cinema Capture',
+      'Same-Day Edit (SDE) Gala Screenings',
+      'Editorial Analog & Medium-Format Still Art',
+      'Licensed Cliffside Aerial Drone Master',
+    ],
+    specialtiesEn: [
+      '4K HDR Large-Format Cinema Capture',
+      'Same-Day Edit (SDE) Gala Screenings',
+      'Editorial Analog & Medium-Format Still Art',
+      'Licensed Cliffside Aerial Drone Master',
+    ],
+    experienceYears: 9,
+    instagram: 'https://instagram.com/foreverbaliwedding',
+    email: 'jakub@foreverbaliweddings.com',
+  },
+  {
+    id: 'made-amanta-christy',
+    name: 'Made Amanta Christy',
+    roleId: 'Event & Operational Manager',
+    roleEn: 'Event & Operational Manager',
+    category: 'management',
+    badgeId: 'Komandan Runsheet & On-Site Director',
+    badgeEn: 'On-Site Operational Commander',
+    bioId:
+      'Komandan operasional lapangan yang mengoordinasikan alur waktu menit-per-menit (runsheet), pergerakan tim vendor, tata suara bebas hembusan angin tebing, dan kenyamanan logistik tamu VVIP dari seremoni sore hingga after-party.',
+    bioEn:
+      'On-site field commander orchestrating minute-by-minute master runsheets, vendor choreography, ocean-wind acoustic isolation, and VVIP guest hospitality from sunset vows to midnight galas.',
+    quoteId: 'Ketenangan pengantin di hari H berakar dari kesiapan kami mengawal 100 skenario tak terduga.',
+    quoteEn: 'A couple’s complete serenity on their wedding day is rooted in our preparation for 100 contingencies.',
+    imageUrl:
+      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=80',
+    specialtiesId: [
+      'Minute-by-Minute Master Runsheet Directing',
+      'Weather Contingency & Acoustic Engineering',
+      'Curfew & Sound Transition Protocols',
+      'VIP Family Concierge Management',
+    ],
+    specialtiesEn: [
+      'Minute-by-Minute Master Runsheet Directing',
+      'Weather Contingency & Acoustic Engineering',
+      'Curfew & Sound Transition Protocols',
+      'VIP Family Concierge Management',
+    ],
+    experienceYears: 8,
+    instagram: 'https://instagram.com/foreverbaliwedding',
+    email: 'amanta@foreverbaliweddings.com',
+  },
+  {
+    id: 'putu-ayu-tresnayani',
+    name: 'Putu Ayu Tresnayani',
+    roleId: 'Wedding Planner Manager',
+    roleEn: 'Wedding Planner Manager',
+    category: 'management',
+    badgeId: 'Kepala Perencana & Kurator Pasangan',
+    badgeEn: 'Head of Couple Concierge & Planning',
+    bioId:
+      'Kepala kurator perencanaan pernikahan yang mendampingi pasangan dari tahap penyusunan moodboard, seleksi palet warna, desain stationery bespoke, kurasi souvenir ramah lingkungan, hingga gladi resik penuh kehangatan.',
+    bioEn:
+      'Head wedding planning director guiding couples closely through aesthetic moodboards, bespoke stationery typography, sustainable guest favors, and compassionate rehearsal staging.',
+    quoteId: 'Mendengarkan kisah cinta Anda adalah awal dari setiap rancangan mahakarya yang kami bangun.',
+    quoteEn: 'Deeply listening to your love story is where our bespoke architectural dreams begin.',
+    imageUrl:
+      'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=900&q=80',
+    specialtiesId: [
+      'Bespoke Client Journey Concierge',
+      'Palette & Stationery Typography Styling',
+      'Menu Tasting & Sommelier Curation',
+      'Wedding Rehearsal & Vow Coordination',
+    ],
+    specialtiesEn: [
+      'Bespoke Client Journey Concierge',
+      'Palette & Stationery Typography Styling',
+      'Menu Tasting & Sommelier Curation',
+      'Wedding Rehearsal & Vow Coordination',
+    ],
+    experienceYears: 8,
+    instagram: 'https://instagram.com/foreverbaliwedding',
+    email: 'tresnayani@foreverbaliweddings.com',
+  },
+  {
+    id: 'gede-aria-charisma-udayana',
+    name: 'Gede Aria Charisma Udayana',
+    roleId: 'Creative & Decoration Coordinator',
+    roleEn: 'Creative & Decoration Coordinator',
+    category: 'creative',
+    badgeId: 'Koordinator Kreatif & Tata Ruang',
+    badgeEn: 'Creative & Spatial Design Architect',
+    bioId:
+      'Perancang kreatif tata ruang yang memadukan keanggunan instalasi botani megah, tata pencahayaan twilight hangat romantis, struktur lengkungan altar melayang, dan instalasi meja banquet ultra-mewah.',
+    bioEn:
+      'Spatial design architect and creative coordinator harmonizing monumental botanical installations, ambient twilight lighting design, floating ceremony altars, and ultra-luxurious banquet table-scapes.',
+    quoteId: 'Kami melukiskan ruang dengan bayang-bayang senja, wewangian kamboja, dan simfoni cahaya lilin.',
+    quoteEn: 'We paint spaces with twilight shadows, indigenous frangipani aromas, and candlelight symphonies.',
+    imageUrl:
+      'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=900&q=80',
+    specialtiesId: [
+      '3D Spatial Lighting & Twilight Atmosphere',
+      'Monumental Altar Floral Architecture',
+      'Bespoke Banquet Table-Scape Curation',
+      'Contemporary Nusantara Woodcraft & Fabric',
+    ],
+    specialtiesEn: [
+      '3D Spatial Lighting & Twilight Atmosphere',
+      'Monumental Altar Floral Architecture',
+      'Bespoke Banquet Table-Scape Curation',
+      'Contemporary Nusantara Woodcraft & Fabric',
+    ],
+    experienceYears: 7,
+    instagram: 'https://instagram.com/foreverbaliwedding',
+    email: 'aria.udayana@foreverbaliweddings.com',
+  },
+];
+
 

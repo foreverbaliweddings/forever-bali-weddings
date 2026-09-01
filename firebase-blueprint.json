@@ -1,0 +1,39 @@
+{
+  "entities": {
+    "TeamMember": {
+      "title": "TeamMember",
+      "description": "Permanent team member profile photo and metadata for Forever Bali Weddings",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier matching the team member ID"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the team member"
+        },
+        "photoUrl": {
+          "type": "string",
+          "description": "Persistent public download URL of the photo"
+        },
+        "photoStoragePath": {
+          "type": "string",
+          "description": "Storage reference path"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of last update"
+        }
+      },
+      "required": ["id", "photoUrl"]
+    }
+  },
+  "firestore": {
+    "/teamMembers/{memberId}": {
+      "entity": "TeamMember",
+      "description": "Individual team member photo and profile records"
+    }
+  }
+}

@@ -186,4 +186,59 @@ export interface AnniversaryOffering {
   imageUrl: string;
 }
 
+export interface CuratedPartnerLook {
+  titleId: string;
+  titleEn: string;
+  styleId: string;
+  styleEn: string;
+  imageUrl: string;
+}
+
+export interface CuratedPartner {
+  id: string;
+  name: string;
+  category: 'floral' | 'hair-styling' | 'cinematography' | 'gastronomy';
+  roleId: string;
+  roleEn: string;
+  badgeId: string;
+  badgeEn: string;
+  instagramHandle: string;
+  instagramUrl: string;
+  taglineId: string;
+  taglineEn: string;
+  descriptionId: string;
+  descriptionEn: string;
+  specialtyId: string;
+  specialtyEn: string;
+  featuresId: string[];
+  featuresEn: string[];
+  imageUrl: string;
+  galleryImages: string[];
+  portfolioLooks?: CuratedPartnerLook[];
+  leadTimeId: string;
+  leadTimeEn: string;
+  pricingIndicator: '$$$' | '$$$$' | '$$$$$';
+  isOfficialPartner: boolean;
+}
+
+export interface TeamMember {
+  id: string;
+  name: string;
+  roleId: string;
+  roleEn: string;
+  category: 'executive' | 'management' | 'creative';
+  badgeId?: string;
+  badgeEn?: string;
+  bioId: string;
+  bioEn: string;
+  quoteId?: string;
+  quoteEn?: string;
+  imageUrl: string;
+  specialtiesId: string[];
+  specialtiesEn: string[];
+  experienceYears?: number;
+  instagram?: string;
+  email?: string;
+}
+
 

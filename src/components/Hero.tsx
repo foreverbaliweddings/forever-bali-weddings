@@ -34,6 +34,8 @@ export const Hero: React.FC<HeroProps> = ({ lang }) => {
         <img
           src={HERO_DATA.heroImage}
           alt="Curated Luxury Bali Wedding Packages"
+          referrerPolicy="no-referrer"
+          fetchPriority="high"
           className="w-full h-full object-cover object-center scale-105 transition-transform duration-1000"
         />
         {/* Multi-layer luxury gradients for perfect text readability and quiet luxury mood */}

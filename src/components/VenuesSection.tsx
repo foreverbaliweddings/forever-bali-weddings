@@ -214,6 +214,8 @@ export const VenuesSection: React.FC<VenuesSectionProps> = ({ lang }) => {
                     <img
                       src={venue.image}
                       alt={name}
+                      loading="lazy"
+                      referrerPolicy="no-referrer"
                       className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
                     />
                     

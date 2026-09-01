@@ -7,6 +7,7 @@ import { PackagesSection } from './components/PackagesSection';
 import { VenuesSection } from './components/VenuesSection';
 import { NusantaraHeritageSection } from './components/NusantaraHeritageSection';
 import { ComprehensiveServicesSection } from './components/ComprehensiveServicesSection';
+import { CuratedPartnersSection } from './components/CuratedPartnersSection';
 import { ComparisonSection } from './components/ComparisonSection';
 import { TrackRecordSection } from './components/TrackRecordSection';
 import { PlanningVoyageSection } from './components/PlanningVoyageSection';
@@ -23,12 +24,25 @@ import { ConsultationModal } from './components/ConsultationModal';
 import { WeddingGuideModal } from './components/WeddingGuideModal';
 import { GuideFloatingBanner } from './components/GuideFloatingBanner';
 import VenueCatalog from './components/VenueCatalog';
+import { DestinationMatcher } from './components/DestinationMatcher';
+import { VisionStudio } from './components/VisionStudio';
+import { AtmosphereSimulator } from './components/AtmosphereSimulator';
+import { EditorialBlog } from './components/EditorialBlog';
+import { CurrencyInvestmentCalculator } from './components/CurrencyInvestmentCalculator';
+import { GuestRSVPConcierge } from './components/GuestRSVPConcierge';
+import { ItineraryBuilder } from './components/ItineraryBuilder';
+import { MoodboardExporter } from './components/MoodboardExporter';
+import { CostTransparencyEngine } from './components/CostTransparencyEngine';
+import { VipBookingModal } from './components/VipBookingModal';
 
 export default function App() {
   const [lang, setLang] = useState<Language>('ID');
   const [selectedPackage, setSelectedPackage] = useState<string>('');
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
   const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
+  const [isVipBookingModalOpen, setIsVipBookingModalOpen] = useState(false);
+  const [vipModalTier, setVipModalTier] = useState<string>('');
+  const [vipModalRegion, setVipModalRegion] = useState<string>('');
 
   const handleToggleLang = (newLang: Language) => {
     setLang(newLang);
@@ -40,6 +54,12 @@ export default function App() {
 
   const handleClearSelectedPackage = () => {
     setSelectedPackage('');
+  };
+
+  const handleOpenVipBooking = (tier?: string, region?: string) => {
+    setVipModalTier(tier || '');
+    setVipModalRegion(region || '');
+    setIsVipBookingModalOpen(true);
   };
 
   const handleLockEstimate = (data: any) => {
@@ -61,8 +81,11 @@ export default function App() {
       {/* Page 1: Hero Section */}
       <Hero lang={lang} />
 
-      {/* Page 2: Bespoke Hospitality - About Our Studio */}
-      <AboutSection lang={lang} />
+      {/* Page 2: Bespoke Hospitality & Executive Leadership - About Our Studio & Team */}
+      <AboutSection
+        lang={lang}
+        onOpenConsultation={() => setIsConsultationModalOpen(true)}
+      />
 
       {/* Pages 3, 4, 5: Curated Luxury Packages (Essential, Artisan, Signature Elite) */}
       <PackagesSection
@@ -76,14 +99,35 @@ export default function App() {
       {/* Curated Off-Market Private Sanctuaries Catalog */}
       <VenueCatalog lang={lang} />
 
+      {/* Interactive Smart Destination Matcher (Aria Concierge) */}
+      <DestinationMatcher lang={lang} />
+
+      {/* Interactive Live Wedding Vision Studio */}
+      <VisionStudio lang={lang} />
+
+      {/* Time-of-Day Atmosphere Lighting Simulator */}
+      <AtmosphereSimulator lang={lang} />
+
       {/* Interactive Wedding Investment Estimator */}
       <BudgetEstimatorSection lang={lang} onLockEstimate={handleLockEstimate} />
+
+      {/* Interactive Multi-Currency Investment Engine */}
+      <CurrencyInvestmentCalculator lang={lang} onOpenVipBooking={handleOpenVipBooking} />
+
+      {/* High-Intent SEO Cost Transparency Engine & 5-Way Allocation */}
+      <CostTransparencyEngine lang={lang} onOpenVipBooking={handleOpenVipBooking} />
 
       {/* Page 6: Cultural Reverence - Nusantara Heritage */}
       <NusantaraHeritageSection lang={lang} />
 
       {/* Page 7: 360-Degree Execution - Comprehensive Services */}
       <ComprehensiveServicesSection lang={lang} />
+
+      {/* Curated Luxury Artisan Partners (Cosma Florist, Ayu Hairstylist, etc.) */}
+      <CuratedPartnersSection
+        lang={lang}
+        onOpenConsultation={() => setIsConsultationModalOpen(true)}
+      />
 
       {/* Page 8: At A Glance - Package Comparison Matrix */}
       <ComparisonSection lang={lang} />
@@ -100,6 +144,15 @@ export default function App() {
         onOpenConsultation={() => setIsConsultationModalOpen(true)}
       />
 
+      {/* VVIP Guest RSVP & Hospitality Concierge */}
+      <GuestRSVPConcierge lang={lang} />
+
+      {/* Interactive Multi-Day 3-Day Wedding Itinerary Builder */}
+      <ItineraryBuilder lang={lang} />
+
+      {/* VVIP Moodboard & Aesthetic Portfolio Exporter */}
+      <MoodboardExporter lang={lang} />
+
       {/* Page 11: Visual Inspiration - Iconic Backdrops */}
       <BackdropsSection lang={lang} />
 
@@ -115,6 +168,9 @@ export default function App() {
       {/* Lead Magnet: Download 2026/2027 Luxury Bali Wedding Guide & Pricing */}
       <LeadMagnetSection lang={lang} />
 
+      {/* Editorial Journal & Luxury Wedding Wisdom CMS */}
+      <EditorialBlog lang={lang} />
+
       {/* Page 12: Begin Your Forever - Contact & Consultation Inquiries */}
       <ContactSection
         lang={lang}
@@ -122,13 +178,13 @@ export default function App() {
         onClearSelectedPackage={handleClearSelectedPackage}
       />
 
-      {/* Page 13: Main Footer & Official Social Channels */}
+      {/* Page 13: Main Footer & Official Social Channels (Includes Permanent Aria AI Concierge Engine) */}
       <Footer lang={lang} />
 
-      {/* Floating Instant WhatsApp Button */}
+      {/* Floating Instant WhatsApp Button (Positioned clearly on bottom-right z-[1000]) */}
       <FloatingWhatsApp lang={lang} />
 
-      {/* Floating Subtle Wedding Guide Banner */}
+      {/* Floating Subtle Wedding Guide Banner (Positioned on bottom-left z-[990]) */}
       <GuideFloatingBanner
         lang={lang}
         onOpenGuideModal={() => setIsGuideModalOpen(true)}
@@ -146,6 +202,15 @@ export default function App() {
         isOpen={isConsultationModalOpen}
         onClose={() => setIsConsultationModalOpen(false)}
         lang={lang}
+      />
+
+      {/* VVIP Discovery & Executive Video Consultation Time-Slot Modal */}
+      <VipBookingModal
+        isOpen={isVipBookingModalOpen}
+        onClose={() => setIsVipBookingModalOpen(false)}
+        lang={lang}
+        initialTier={vipModalTier}
+        initialRegion={vipModalRegion}
       />
     </div>
   );

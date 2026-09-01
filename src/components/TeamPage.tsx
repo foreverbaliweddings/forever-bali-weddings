@@ -1,23 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Sparkles,
-  Globe2,
+  Award,
   Crown,
-  ArrowRight,
-  ArrowLeft,
-  Upload,
   Camera,
+  Calendar,
+  MessageCircle,
+  Mail,
+  Instagram,
+  Edit3,
+  Upload,
   Check,
   RotateCcw,
   X,
   Plus,
   Trash2,
   SlidersHorizontal,
-  Instagram,
-  Mail,
-  MessageCircle,
-  Calendar,
-  Award,
+  ArrowUpRight,
   ShieldCheck,
   HeartHandshake,
   Briefcase,
@@ -25,13 +24,14 @@ import {
   Compass,
   FileCheck2,
   Info,
+  ArrowLeft,
   Loader2,
   CheckCircle2,
   AlertCircle,
   ImageIcon,
 } from 'lucide-react';
 import { Language, TeamMember } from '../types';
-import { ABOUT_DATA, INITIAL_TEAM_MEMBERS, CONTACT_INFO } from '../data/weddingData';
+import { INITIAL_TEAM_MEMBERS, CONTACT_INFO } from '../data/weddingData';
 import {
   uploadTeamMemberPhotoToSupabase,
   optimizeImageFile,
@@ -47,27 +47,52 @@ import {
   UploadPhotoState,
 } from '../lib/supabase';
 
-interface AboutSectionProps {
+interface TeamPageProps {
   lang: Language;
   onOpenConsultation?: () => void;
 }
 
-export const AboutSection: React.FC<AboutSectionProps> = ({
-  lang,
-  onOpenConsultation,
-}) => {
-  // Team State initialized from project assets (INITIAL_TEAM_MEMBERS) with Supabase Cloud as single source of truth
-  const [teamMembers, setTeamMembers] = useState<TeamMember[]>(INITIAL_TEAM_MEMBERS);
+const STORAGE_KEY = 'FBW_TEAM_MEMBERS_V1';
 
-  // Active view state: 'story' (default About studio narrative) | 'team' (curated team roster)
-  const [viewMode, setViewMode] = useState<'story' | 'team'>('story');
+export const TeamPage: React.FC<TeamPageProps> = ({ lang, onOpenConsultation }) => {
+  // ─── Team State with Exact Lazy State Initialization from LocalStorage ───
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return INITIAL_TEAM_MEMBERS.map((initialMember, idx) => {
+            const matching = parsed.find((p: any) => p.id === initialMember.id) || parsed[idx];
+            if (
+              matching &&
+              matching.imageUrl &&
+              typeof matching.imageUrl === 'string' &&
+              matching.imageUrl.trim().length > 10
+            ) {
+              return {
+                ...initialMember,
+                ...matching,
+                imageUrl: matching.imageUrl,
+              };
+            }
+            return initialMember;
+          });
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return INITIAL_TEAM_MEMBERS;
+  });
+
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [editingMember, setEditingMember] = useState<TeamMember | null>(null);
   const [saveToastMessage, setSaveToastMessage] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
 
-  // Pending Photo Preview State (Before saving to Firestore/Storage)
+  // Pending Photo Preview State (Before saving to Supabase)
   const [pendingPhoto, setPendingPhoto] = useState<{
     memberId: string;
     memberName: string;
@@ -84,14 +109,14 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
   const [uploadStatus, setUploadStatus] = useState<UploadPhotoState>('idle');
   const [diagnostics, setDiagnostics] = useState<SupabaseDiagnosticReport | null>(null);
 
-  // Per-member quick indicators
+  // Per-member upload status states
   const [uploadingMemberId, setUploadingMemberId] = useState<string | null>(null);
   const [successMemberId, setSuccessMemberId] = useState<string | null>(null);
 
   // Dedicated Map of file input refs per member ID
   const fileInputRefs = useRef<{ [memberId: string]: HTMLInputElement | null }>({});
 
-  // ─── Real-time Supabase Database Subscription ───
+  // ─── Real-time Supabase Cloud Subscription ───
   useEffect(() => {
     // 1. Initial Cloud Fetch from Supabase
     fetchTeamMembersFromSupabase().then((cloudData) => {
@@ -105,7 +130,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
       applyCloudPhotos(cloudData);
     });
 
-    // 3. Initial Supabase diagnostics run
+    // 3. Initial Diagnostics probe
     runSupabaseDiagnostics().then(setDiagnostics).catch(() => {});
 
     return () => {
@@ -142,6 +167,9 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
         return member;
       });
 
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      } catch {}
       return updated;
     });
   };
@@ -153,7 +181,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
     }, 4500);
   };
 
-  // Reset to default studio profiles in Supabase
+  // Reset to default
   const handleResetToDefault = async () => {
     const confirmMsg =
       lang === 'ID'
@@ -162,6 +190,9 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
     if (window.confirm(confirmMsg)) {
       try {
         await resetAllTeamMembersInSupabase();
+        try {
+          localStorage.removeItem(STORAGE_KEY);
+        } catch {}
         setTeamMembers(INITIAL_TEAM_MEMBERS);
         showToast(
           lang === 'ID'
@@ -173,8 +204,8 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
         setTeamMembers(INITIAL_TEAM_MEMBERS);
         showToast(
           lang === 'ID'
-            ? 'Foto profil tim dikembalikan ke standar lokal studio.'
-            : 'Team photos reset to local studio defaults.'
+            ? 'Data tim dikembalikan ke standar lokal awal.'
+            : 'Team data reset to default.'
         );
       }
     }
@@ -287,7 +318,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
 
       setUploadStatus('success');
 
-      // Update state immediately with persistent Supabase public URL
+      // Update state immediately with persistent download URL
       setTeamMembers((prev) => {
         const updated = prev.map((m) => {
           if (m.id === memberId) {
@@ -301,6 +332,9 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
           return m;
         });
 
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+        } catch {}
         return updated;
       });
 
@@ -323,7 +357,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
         setSuccessMemberId(null);
       }, 1000);
     } catch (err: any) {
-      console.error('[Supabase Upload Pipeline ERROR Caught in Component]', err);
+      console.error('[Supabase Upload Pipeline ERROR Caught in TeamPage Component]', err);
       setUploadStatus('error');
       setUploadingMemberId(null);
       setUploadError(
@@ -350,8 +384,8 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
       e.stopPropagation();
     }
     setUploadError(null);
-    const directInput = (document.getElementById(`file-input-${memberId}`) ||
-      document.getElementById(`about-team-file-input-${memberId}`) ||
+    const directInput = (document.getElementById(`team-file-input-${memberId}`) ||
+      document.getElementById(`file-input-${memberId}`) ||
       fileInputRefs.current[memberId]) as HTMLInputElement | null;
 
     if (directInput) {
@@ -372,7 +406,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
     );
   };
 
-  // Categories for filter
+  // Categories
   const categories = [
     {
       id: 'all',
@@ -382,20 +416,20 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
     },
     {
       id: 'executive',
-      nameId: 'Direksi Eksekutif',
+      nameId: 'Pimpinan Eksekutif',
       nameEn: 'Executive Leadership',
       icon: <Crown className="w-3.5 h-3.5" />,
     },
     {
       id: 'management',
-      nameId: 'Manajemen Acara & Perencana',
+      nameId: 'Operasional & Perencana',
       nameEn: 'Operations & Planning',
       icon: <Briefcase className="w-3.5 h-3.5" />,
     },
     {
       id: 'creative',
-      nameId: 'Kreatif, Visual & Tata Ruang',
-      nameEn: 'Creative & Spatial Design',
+      nameId: 'Kreatif & Sinema',
+      nameEn: 'Creative & Visual Masters',
       icon: <Sparkles className="w-3.5 h-3.5" />,
     },
   ];
@@ -406,10 +440,10 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
       : teamMembers.filter((m) => m.category === activeCategory);
 
   return (
-    <section id="about" className="py-24 sm:py-32 bg-[#FDFBF7] relative overflow-hidden">
+    <section id="team" className="py-24 sm:py-32 bg-[#111816] text-[#FDFBF7] relative overflow-hidden">
       {/* Toast Notification */}
       {saveToastMessage && (
-        <div className="fixed top-6 right-6 z-50 bg-[#111816] text-[#FDFBF7] border border-[#C9A96E] px-4 py-3 rounded shadow-2xl flex items-center gap-3 animate-fadeIn">
+        <div className="fixed top-6 right-6 z-50 bg-[#1A2421] text-[#FDFBF7] border border-[#C9A96E] px-4 py-3 rounded-md shadow-2xl flex items-center gap-3 animate-fadeIn">
           <Check className="w-4 h-4 text-[#C9A96E]" />
           <span className="text-xs font-medium">{saveToastMessage}</span>
           <button
@@ -423,7 +457,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
 
       {/* Upload Error Banner */}
       {uploadError && (
-        <div className="fixed top-20 right-6 z-50 bg-red-950/90 text-red-200 border border-red-500/50 px-4 py-3 rounded shadow-2xl flex items-center gap-3 animate-fadeIn">
+        <div className="fixed top-20 right-6 z-50 bg-red-950/90 text-red-200 border border-red-500/50 px-4 py-3 rounded-md shadow-2xl flex items-center gap-3 animate-fadeIn">
           <AlertCircle className="w-4 h-4 text-red-400" />
           <span className="text-xs font-medium">{uploadError}</span>
           <button
@@ -435,442 +469,307 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
         </div>
       )}
 
+      {/* Background Ambience */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(201,169,110,0.15),rgba(255,255,255,0))]" />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* ─── Part 1: Studio Heritage & Narrative (Default Story View) ─── */}
-        {viewMode === 'story' && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-            {/* Left Narrative Column */}
-            <div className="lg:col-span-6 space-y-6">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 border border-[#C9A96E]/30 bg-[#F7F4EE] rounded-sm">
-                <Sparkles className="w-3.5 h-3.5 text-[#C9A96E]" />
-                <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#C9A96E]">
-                  {lang === 'ID' ? ABOUT_DATA.eyebrowId : ABOUT_DATA.eyebrowEn}
-                </span>
-              </div>
-
-              <h2
-                className="text-3xl sm:text-4xl md:text-5xl font-serif font-light text-[#111816] tracking-wide leading-tight"
-                style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
-              >
-                {lang === 'ID' ? ABOUT_DATA.titleId : ABOUT_DATA.titleEn}
-              </h2>
-
-              <p className="text-base sm:text-lg font-serif italic text-[#C9A96E]">
-                "{lang === 'ID' ? 'Ketenangan Kemewahan & Harmoni Abadi' : 'Quiet Luxury & Harmonious Mastery'}"
-              </p>
-
-              <div className="space-y-4 text-sm sm:text-base text-[#444444] font-light leading-relaxed">
-                <p>{lang === 'ID' ? ABOUT_DATA.paragraph1Id : ABOUT_DATA.paragraph1En}</p>
-                <p>{lang === 'ID' ? ABOUT_DATA.paragraph2Id : ABOUT_DATA.paragraph2En}</p>
-              </div>
-
-              {/* Pillars Grid */}
-              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-[#E5E1D8]">
-                <div className="space-y-1">
-                  <h4 className="text-xs uppercase tracking-wider font-semibold text-[#111816]">
-                    {lang === 'ID' ? 'Presisi Logistik & Banjar' : 'Logistical & Banjar Precision'}
-                  </h4>
-                  <p className="text-xs text-[#666666] leading-snug">
-                    {lang === 'ID'
-                      ? 'Integrasi izin Banjar dan koordinasi vendor tanpa hambatan.'
-                      : 'Seamless Banjar permit integration and vendor synchronization.'}
-                  </p>
-                </div>
-                <div className="space-y-1">
-                  <h4 className="text-xs uppercase tracking-wider font-semibold text-[#111816]">
-                    {lang === 'ID' ? 'Estetika & Sinema Mewah' : 'Luxury Aesthetics & Cinema'}
-                  </h4>
-                  <p className="text-xs text-[#666666] leading-snug">
-                    {lang === 'ID'
-                      ? 'Desain spasial berkelas dan dokumentasi sinematik abadi.'
-                      : 'Bespoke spatial design and timeless cinematic coverage.'}
-                  </p>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="pt-6 flex flex-wrap items-center gap-4">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setViewMode('team');
-                    setTimeout(() => {
-                      const teamHeader = document.getElementById('about-team-header');
-                      if (teamHeader) {
-                        teamHeader.scrollIntoView({ behavior: 'smooth' });
-                      }
-                    }, 50);
-                  }}
-                  className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-[#111816] hover:bg-[#C9A96E] text-[#FDFBF7] hover:text-[#111816] text-xs font-semibold uppercase tracking-[0.18em] transition-all duration-300 rounded-sm cursor-pointer shadow-md group"
-                >
-                  <Users className="w-4 h-4 text-[#C9A96E] group-hover:text-[#111816] transition-colors" />
-                  <span>{lang === 'ID' ? 'Temui Dewan Direksi Kami' : 'Meet Our Executive Directors'}</span>
-                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
-                </button>
-
-                {onOpenConsultation && (
-                  <button
-                    type="button"
-                    onClick={onOpenConsultation}
-                    className="inline-flex items-center gap-2 px-5 py-3.5 bg-transparent hover:bg-[#F7F4EE] text-[#111816] border border-[#C9A96E]/50 text-xs font-semibold uppercase tracking-[0.18em] rounded-sm transition-all cursor-pointer"
-                  >
-                    <Calendar className="w-3.5 h-3.5 text-[#C9A96E]" />
-                    <span>{lang === 'ID' ? 'Jadwalkan Konsultasi VIP' : 'Book VIP Discovery Session'}</span>
-                  </button>
-                )}
-              </div>
-            </div>
-
-            {/* Right Image Column */}
-            <div className="lg:col-span-6 relative">
-              <div className="relative rounded-sm overflow-hidden border border-[#E5E1D8] shadow-xl group">
-                <img
-                  src={ABOUT_DATA.image}
-                  alt="About Forever Bali Weddings Studio"
-                  loading="lazy"
-                  referrerPolicy="no-referrer"
-                  className="w-full h-[460px] sm:h-[540px] object-cover object-center group-hover:scale-105 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-
-                {/* Overlay Badge */}
-                <div className="absolute bottom-6 left-6 right-6 p-5 bg-[#FDFBF7]/95 backdrop-blur-md border border-[#E5E1D8] text-[#111816] rounded-sm flex items-center justify-between shadow-lg">
-                  <div>
-                    <p className="text-[10px] uppercase tracking-[0.2em] text-[#C9A96E] font-semibold">
-                      {lang === 'ID' ? 'Pengalaman Teruji' : 'Proven Heritage'}
-                    </p>
-                    <p className="font-serif text-base sm:text-lg font-light text-[#111816]">
-                      {lang === 'ID' ? 'Satu Dekade Harmoni Bali' : 'A Decade of Harmonized Luxury'}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <span className="font-serif text-2xl sm:text-3xl text-[#C9A96E] font-light">10+</span>
-                    <p className="text-[9px] uppercase tracking-widest text-[#666666]">Years</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 border border-[#C9A96E]/30 bg-[#1A2421] mb-4 rounded-sm">
+            <Crown className="w-3.5 h-3.5 text-[#C9A96E]" />
+            <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#C9A96E]">
+              {lang === 'ID' ? 'DEWAN DIREKSI & MANAJEMEN INTI' : 'EXECUTIVE DIRECTORS & CORE MASTERS'}
+            </span>
           </div>
-        )}
 
-        {/* ─── Part 2: Executive Leadership Gallery (Dedicated Team View) ─── */}
-        {viewMode === 'team' && (
-          <div id="about-team-header" className="pt-4">
-            {/* Header Title & Subtitle */}
-            <div className="text-center max-w-3xl mx-auto mb-12">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 border border-[#C9A96E]/30 bg-[#F7F4EE] mb-4 rounded-sm">
-                <Crown className="w-3.5 h-3.5 text-[#C9A96E]" />
-                <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#C9A96E]">
-                  {lang === 'ID' ? 'DEWAN DIREKSI & MANAJEMEN INTI' : 'EXECUTIVE DIRECTORS & CORE MASTERS'}
-                </span>
-              </div>
+          <h2
+            className="text-3xl sm:text-4xl md:text-5xl font-serif font-light text-[#FDFBF7] tracking-wide mb-4"
+            style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
+          >
+            {lang === 'ID'
+              ? 'Arsitek di Balik Mahakarya Anda'
+              : 'The Masters Behind Your Celebration'}
+          </h2>
 
-              <h3
-                className="text-3xl sm:text-4xl md:text-5xl font-serif font-light text-[#111816] tracking-wide mb-4"
-                style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
-              >
-                {lang === 'ID'
-                  ? 'Arsitek di Balik Mahakarya Anda'
-                  : 'The Masters Behind Your Celebration'}
-              </h3>
+          <div className="w-16 h-[1.5px] bg-[#C9A96E] mx-auto mb-5" />
 
-              <div className="w-16 h-[1.5px] bg-[#C9A96E] mx-auto mb-5" />
+          <p className="text-sm sm:text-base text-[#D4CDC3] font-light leading-relaxed">
+            {lang === 'ID'
+              ? 'Enam direktur eksekutif dan manajer berdedikasi yang menggabungkan presisi logistik, penguasaan adat Banjar Bali, dan estetika visual kelas dunia.'
+              : 'Six dedicated executive directors and operational commanders harmonizing logistical precision, Balinese Banjar protocols, and world-class visual artistry.'}
+          </p>
 
-              <p className="text-sm sm:text-base text-[#555555] font-light leading-relaxed">
-                {lang === 'ID'
-                  ? 'Enam direktur eksekutif dan manajer berdedikasi yang menggabungkan presisi logistik, penguasaan adat Banjar Bali, dan estetika visual kelas dunia.'
-                  : 'Six dedicated executive directors and operational commanders harmonizing logistical precision, Balinese Banjar protocols, and world-class visual artistry.'}
-              </p>
+          {/* Admin & Customization Bar */}
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+            <button
+              type="button"
+              id="team-btn-toggle-edit-mode"
+              onClick={() => setIsEditMode(!isEditMode)}
+              className={`inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold uppercase tracking-wider rounded-sm transition-all cursor-pointer ${
+                isEditMode
+                  ? 'bg-[#C9A96E] text-[#111816] shadow-md ring-2 ring-[#C9A96E]/50'
+                  : 'bg-[#1A2421] hover:bg-[#25322E] text-[#D4CDC3] border border-[#C9A96E]/30'
+              }`}
+            >
+              <Camera className="w-3.5 h-3.5" />
+              <span>
+                {isEditMode
+                  ? lang === 'ID'
+                    ? 'Selesai Kustomisasi'
+                    : 'Done Customizing'
+                  : lang === 'ID'
+                  ? 'Mode Kustomisasi Foto / Profil'
+                  : 'Customize Photos / Profiles'}
+              </span>
+            </button>
 
-              {/* Admin & Customization Bar */}
-              <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-                <button
-                  type="button"
-                  id="btn-toggle-edit-mode"
-                  onClick={() => setIsEditMode(!isEditMode)}
-                  className={`inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold uppercase tracking-wider rounded-sm transition-all cursor-pointer ${
-                    isEditMode
-                      ? 'bg-[#C9A96E] text-[#111816] shadow-md ring-2 ring-[#C9A96E]/50'
-                      : 'bg-[#F7F4EE] hover:bg-[#EAE4D7] text-[#222222] border border-[#DCD6C9]'
-                  }`}
-                >
-                  <Camera className="w-3.5 h-3.5" />
-                  <span>
-                    {isEditMode
-                      ? lang === 'ID'
-                        ? 'Selesai Kustomisasi'
-                        : 'Done Customizing'
-                      : lang === 'ID'
-                      ? 'Mode Kustomisasi Foto / Profil'
-                      : 'Customize Photos / Profiles'}
-                  </span>
-                </button>
+            <button
+              type="button"
+              id="team-btn-reset-defaults"
+              onClick={handleResetToDefault}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#1A2421] hover:bg-[#25322E] text-[#A89E90] hover:text-[#FDFBF7] border border-white/10 text-xs font-semibold uppercase tracking-wider rounded-sm transition-all cursor-pointer"
+              title={lang === 'ID' ? 'Kembalikan Foto & Data Awal' : 'Reset to Default Photos'}
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>{lang === 'ID' ? 'Reset Standar Awal' : 'Reset Defaults'}</span>
+            </button>
+          </div>
+        </div>
 
-                <button
-                  type="button"
-                  id="btn-reset-team-defaults"
-                  onClick={handleResetToDefault}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#F7F4EE] hover:bg-[#EAE4D7] text-[#666666] hover:text-[#111816] border border-[#DCD6C9] text-xs font-semibold uppercase tracking-wider rounded-sm transition-all cursor-pointer"
-                  title={lang === 'ID' ? 'Kembalikan Foto & Data Awal' : 'Reset to Default Photos'}
-                >
-                  <RotateCcw className="w-3.5 h-3.5" />
-                  <span>{lang === 'ID' ? 'Reset Standar Awal' : 'Reset Defaults'}</span>
-                </button>
-              </div>
-            </div>
+        {/* Category Filter */}
+        <div className="flex flex-wrap items-center justify-center gap-2 mb-12">
+          {categories.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => setActiveCategory(cat.id)}
+              className={`inline-flex items-center gap-2 px-4 py-2 rounded-sm text-xs uppercase tracking-wider font-semibold transition-all duration-300 cursor-pointer ${
+                activeCategory === cat.id
+                  ? 'bg-[#C9A96E] text-[#111816] shadow-lg scale-105'
+                  : 'bg-[#1A2421] text-[#D4CDC3] border border-white/10 hover:border-[#C9A96E]/50 hover:text-white'
+              }`}
+            >
+              {cat.icon}
+              <span>{lang === 'ID' ? cat.nameId : cat.nameEn}</span>
+              <span className="text-[10px] opacity-75 px-1.5 py-0.5 rounded-full bg-black/20">
+                {cat.id === 'all'
+                  ? teamMembers.length
+                  : teamMembers.filter((m) => m.category === cat.id).length}
+              </span>
+            </button>
+          ))}
+        </div>
 
-            {/* Category Filter Pills */}
-            <div className="flex flex-wrap items-center justify-center gap-2 mb-12">
-              {categories.map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => setActiveCategory(cat.id)}
-                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-sm text-xs uppercase tracking-wider font-semibold transition-all duration-300 cursor-pointer ${
-                    activeCategory === cat.id
-                      ? 'bg-[#111816] text-[#C9A96E] border border-[#C9A96E] shadow-sm'
-                      : 'bg-[#F7F4EE] text-[#555555] border border-[#E0D9CB] hover:border-[#C9A96E]/50 hover:text-[#111816]'
-                  }`}
-                >
-                  {cat.icon}
-                  <span>{lang === 'ID' ? cat.nameId : cat.nameEn}</span>
-                  <span className="text-[10px] opacity-75 px-1.5 py-0.5 rounded-full bg-black/5">
-                    {cat.id === 'all'
-                      ? teamMembers.length
-                      : teamMembers.filter((m) => m.category === cat.id).length}
-                  </span>
-                </button>
-              ))}
-            </div>
+        {/* Team Members Grid (The 6 Members) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredMembers.map((member) => (
+            <div
+              key={member.id}
+              id={`team-page-card-${member.id}`}
+              className="bg-[#1A2421] rounded-sm border border-[#C9A96E]/20 hover:border-[#C9A96E] transition-all duration-500 overflow-hidden group shadow-xl flex flex-col justify-between"
+            >
+              <div>
+                {/* Member Portrait Box */}
+                <div className="relative h-[420px] sm:h-[440px] w-full overflow-hidden bg-gradient-to-b from-[#111816] to-[#1A2421]">
+                  <img
+                    src={member.imageUrl}
+                    alt={member.name}
+                    loading="lazy"
+                    referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      const fallback = INITIAL_TEAM_MEMBERS.find((m) => m.id === member.id);
+                      if (fallback && (e.target as HTMLImageElement).src !== fallback.imageUrl) {
+                        (e.target as HTMLImageElement).src = fallback.imageUrl;
+                      }
+                    }}
+                    className={`w-full h-full ${
+                      member.id === 'luh-putu-sariani' || member.id === 'gede-arsel-aria-chrisna'
+                        ? 'object-cover object-[center_15%]'
+                        : 'object-cover object-[center_20%]'
+                    } group-hover:scale-105 transition-transform duration-700`}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#1A2421] via-[#1A2421]/20 to-black/20" />
 
-            {/* Team Cards Grid (The 6 Members) */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredMembers.map((member) => (
-                <div
-                  key={member.id}
-                  id={`team-card-${member.id}`}
-                  className="bg-[#111816] text-[#FDFBF7] rounded-sm border border-[#C9A96E]/25 hover:border-[#C9A96E] transition-all duration-500 overflow-hidden group shadow-lg flex flex-col justify-between"
-                >
-                  <div>
-                    {/* Member Portrait Box */}
-                    <div className="relative h-[420px] sm:h-[440px] w-full overflow-hidden bg-gradient-to-b from-[#1E2C28] to-[#111816]">
-                      <img
-                        src={member.imageUrl}
-                        alt={member.name}
-                        loading="lazy"
-                        referrerPolicy="no-referrer"
-                        onError={(e) => {
-                          const fallback = INITIAL_TEAM_MEMBERS.find((m) => m.id === member.id);
-                          if (fallback && (e.target as HTMLImageElement).src !== fallback.imageUrl) {
-                            (e.target as HTMLImageElement).src = fallback.imageUrl;
-                          }
-                        }}
-                        className={`w-full h-full ${
-                          member.id === 'luh-putu-sariani' || member.id === 'gede-arsel-aria-chrisna'
-                            ? 'object-cover object-[center_15%]'
-                            : 'object-cover object-[center_20%]'
-                        } group-hover:scale-105 transition-transform duration-700`}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#111816] via-[#111816]/30 to-black/20" />
+                  {/* Hidden file input per member */}
+                  <input
+                    ref={(el) => {
+                      fileInputRefs.current[member.id] = el;
+                    }}
+                    id={`team-file-input-${member.id}`}
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,image/jpg"
+                    onChange={(e) => handleFileSelect(member.id, e)}
+                    className="hidden"
+                    aria-hidden="true"
+                  />
 
-                      {/* Hidden native file input per member */}
-                      <input
-                        ref={(el) => {
-                          fileInputRefs.current[member.id] = el;
-                        }}
-                        id={`file-input-${member.id}`}
-                        type="file"
-                        accept="image/jpeg,image/png,image/webp,image/jpg"
-                        onChange={(e) => handleFileSelect(member.id, e)}
-                        className="hidden"
-                        aria-hidden="true"
-                      />
+                  {/* Top Right Quick Camera Upload Button */}
+                  <div className="absolute top-4 right-4 z-10 flex items-center gap-1.5">
+                    {member.experienceYears && (
+                      <span className="px-2.5 py-1 bg-black/70 backdrop-blur-md border border-white/20 text-[#D4CDC3] text-[10px] font-mono rounded-full">
+                        {member.experienceYears}+ {lang === 'ID' ? 'Thn' : 'Yrs'} Exp
+                      </span>
+                    )}
 
-                      {/* Top Right Quick Camera Upload Button */}
-                      <div className="absolute top-4 right-4 z-10 flex items-center gap-1.5">
-                        {member.experienceYears && (
-                          <span className="px-2.5 py-1 bg-black/70 backdrop-blur-md border border-white/20 text-[#D4CDC3] text-[10px] font-mono rounded-full">
-                            {member.experienceYears}+ {lang === 'ID' ? 'Thn' : 'Yrs'} Exp
-                          </span>
-                        )}
-
-                        <button
-                          type="button"
-                          id={`about-quick-upload-btn-${member.id}`}
-                          disabled={uploadingMemberId === member.id}
-                          onClick={(e) => triggerUploadForMember(member.id, e)}
-                          className="p-2 bg-[#111816]/90 hover:bg-[#C9A96E] text-[#C9A96E] hover:text-[#111816] border border-[#C9A96E]/50 rounded-full backdrop-blur-md shadow-lg transition-all duration-300 hover:scale-110 cursor-pointer"
-                          title={
-                            lang === 'ID'
-                              ? `Ganti foto untuk ${member.name} dari komputer`
-                              : `Change photo for ${member.name} from computer`
-                          }
-                        >
-                          {uploadingMemberId === member.id ? (
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                          ) : successMemberId === member.id ? (
-                            <Check className="w-4 h-4 text-emerald-400" />
-                          ) : (
-                            <Camera className="w-4 h-4" />
-                          )}
-                        </button>
-                      </div>
-
-                      {/* Edit Mode Overlay */}
-                      {isEditMode && (
-                        <div className="absolute inset-0 bg-black/80 backdrop-blur-xs flex flex-col items-center justify-center gap-3 p-6 z-20 animate-fadeIn">
-                          <span className="text-xs font-semibold text-[#C9A96E] uppercase tracking-widest">
-                            {lang === 'ID' ? 'Kustomisasi Profil' : 'Profile Customization'}
-                          </span>
-
-                          <button
-                            type="button"
-                            id={`btn-upload-about-photo-${member.id}`}
-                            disabled={uploadingMemberId === member.id}
-                            onClick={(e) => triggerUploadForMember(member.id, e)}
-                            className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#C9A96E] hover:bg-[#B8985D] disabled:opacity-50 text-[#111816] font-bold text-xs uppercase tracking-wider rounded-md transition-all cursor-pointer shadow-lg hover:scale-105"
-                          >
-                            {uploadingMemberId === member.id ? (
-                              <>
-                                <Loader2 className="w-4 h-4 animate-spin" />
-                                <span>{lang === 'ID' ? 'Memproses Foto...' : 'Processing Photo...'}</span>
-                              </>
-                            ) : successMemberId === member.id ? (
-                              <>
-                                <CheckCircle2 className="w-4 h-4 text-emerald-900" />
-                                <span>{lang === 'ID' ? 'Foto Tersimpan!' : 'Photo Saved!'}</span>
-                              </>
-                            ) : (
-                              <>
-                                <Upload className="w-4 h-4" />
-                                <span>{lang === 'ID' ? 'Pilih Foto dari Komputer' : 'Choose Photo File'}</span>
-                              </>
-                            )}
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={() => setEditingMember(member)}
-                            className="w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#1A2421] hover:bg-[#25322E] text-[#FDFBF7] border border-[#C9A96E]/50 font-semibold text-xs uppercase tracking-wider rounded-md transition-all cursor-pointer"
-                          >
-                            <Sparkles className="w-3.5 h-3.5 text-[#C9A96E]" />
-                            <span>{lang === 'ID' ? 'Sunting Biodata' : 'Edit Bio & Role'}</span>
-                          </button>
-                        </div>
+                    <button
+                      type="button"
+                      id={`team-quick-upload-btn-${member.id}`}
+                      disabled={uploadingMemberId === member.id}
+                      onClick={(e) => triggerUploadForMember(member.id, e)}
+                      className="p-2 bg-[#111816]/90 hover:bg-[#C9A96E] text-[#C9A96E] hover:text-[#111816] border border-[#C9A96E]/50 rounded-full backdrop-blur-md shadow-lg transition-all duration-300 hover:scale-110 cursor-pointer"
+                      title={
+                        lang === 'ID'
+                          ? `Ganti foto untuk ${member.name} dari komputer`
+                          : `Change photo for ${member.name} from computer`
+                      }
+                    >
+                      {uploadingMemberId === member.id ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : successMemberId === member.id ? (
+                        <Check className="w-4 h-4 text-emerald-400" />
+                      ) : (
+                        <Camera className="w-4 h-4" />
                       )}
-
-                      {/* Bottom Name & Role Overlay */}
-                      <div className="absolute bottom-4 left-4 right-4">
-                        <h3
-                          className="font-serif text-xl sm:text-2xl font-light text-[#FDFBF7] tracking-wide"
-                          style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
-                        >
-                          {member.name}
-                        </h3>
-                        <p className="text-xs uppercase tracking-[0.2em] text-[#C9A96E] font-medium mt-1">
-                          {lang === 'ID' ? member.roleId : member.roleEn}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Member Details */}
-                    <div className="p-6">
-                      {/* Badge */}
-                      <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#1A2421] border border-[#C9A96E]/30 rounded-sm mb-4">
-                        <Sparkles className="w-3 h-3 text-[#C9A96E]" />
-                        <span className="text-[11px] font-medium tracking-wide text-[#E8DCC4]">
-                          {lang === 'ID' ? member.badgeId : member.badgeEn}
-                        </span>
-                      </div>
-
-                      {/* Bio */}
-                      <p className="text-xs text-[#C4BDB2] font-light leading-relaxed mb-5">
-                        {lang === 'ID' ? member.bioId : member.bioEn}
-                      </p>
-
-                      {/* Specialties */}
-                      <div className="space-y-1.5 pt-4 border-t border-white/10 mb-5">
-                        <span className="text-[10px] uppercase tracking-widest text-[#C9A96E] font-semibold block mb-2">
-                          {lang === 'ID' ? 'Fokus Keahlian Utama' : 'Core Directorial Focus'}
-                        </span>
-                        {(lang === 'ID' ? member.specialtiesId : member.specialtiesEn).map(
-                          (spec, sIdx) => (
-                            <div
-                              key={sIdx}
-                              className="flex items-center gap-2 text-[11px] text-[#A89E90]"
-                            >
-                              <div className="w-1 h-1 rounded-full bg-[#C9A96E]" />
-                              <span>{spec}</span>
-                            </div>
-                          )
-                        )}
-                      </div>
-
-                      {/* Philosophy Quote */}
-                      {member.quoteId && (
-                        <div className="p-3.5 bg-[#1A2421]/60 border-l-2 border-[#C9A96E] text-xs font-serif italic text-[#D4CDC3] leading-relaxed">
-                          "{lang === 'ID' ? member.quoteId : member.quoteEn}"
-                        </div>
-                      )}
-                    </div>
+                    </button>
                   </div>
 
-                  {/* Card Footer */}
-                  <div className="p-6 pt-0 flex items-center justify-between border-t border-white/5 mt-4">
-                    <div className="flex items-center gap-2 pt-4">
-                      {member.instagram && (
-                        <a
-                          href={member.instagram}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-1.5 rounded-full bg-white/5 hover:bg-[#C9A96E] text-gray-400 hover:text-[#111816] transition-colors"
-                          title="Instagram Studio"
-                        >
-                          <Instagram className="w-3.5 h-3.5" />
-                        </a>
-                      )}
-                      {member.email && (
-                        <a
-                          href={`mailto:${member.email}`}
-                          className="p-1.5 rounded-full bg-white/5 hover:bg-[#C9A96E] text-gray-400 hover:text-[#111816] transition-colors"
-                          title={member.email}
-                        >
-                          <Mail className="w-3.5 h-3.5" />
-                        </a>
-                      )}
-                    </div>
+                  {/* Edit Mode Overlay */}
+                  {isEditMode && (
+                    <div className="absolute inset-0 bg-black/80 backdrop-blur-xs flex flex-col items-center justify-center gap-3 p-6 z-20 animate-fadeIn">
+                      <span className="text-xs font-semibold text-[#C9A96E] uppercase tracking-widest">
+                        {lang === 'ID' ? 'Kustomisasi Profil' : 'Profile Customization'}
+                      </span>
 
-                    <div className="pt-4">
                       <button
                         type="button"
+                        id={`team-page-btn-upload-photo-${member.id}`}
+                        disabled={uploadingMemberId === member.id}
                         onClick={(e) => triggerUploadForMember(member.id, e)}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#1A2421] hover:bg-[#C9A96E] text-[#D4CDC3] hover:text-[#111816] border border-[#C9A96E]/30 rounded text-[11px] font-medium tracking-wide transition-all cursor-pointer"
+                        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#C9A96E] hover:bg-[#B8985D] disabled:opacity-50 text-[#111816] font-bold text-xs uppercase tracking-wider rounded-md transition-all cursor-pointer shadow-lg hover:scale-105"
                       >
-                        <Camera className="w-3 h-3 text-[#C9A96E] group-hover:text-[#111816]" />
-                        <span>{lang === 'ID' ? 'Ganti Foto' : 'Change Photo'}</span>
+                        {uploadingMemberId === member.id ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            <span>{lang === 'ID' ? 'Memproses Foto...' : 'Processing Photo...'}</span>
+                          </>
+                        ) : successMemberId === member.id ? (
+                          <>
+                            <CheckCircle2 className="w-4 h-4 text-emerald-900" />
+                            <span>{lang === 'ID' ? 'Foto Tersimpan!' : 'Photo Saved!'}</span>
+                          </>
+                        ) : (
+                          <>
+                            <Upload className="w-4 h-4" />
+                            <span>{lang === 'ID' ? 'Pilih Foto dari Komputer' : 'Choose Photo File'}</span>
+                          </>
+                        )}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setEditingMember(member)}
+                        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#111816] hover:bg-[#1A2421] text-[#FDFBF7] border border-[#C9A96E]/50 font-semibold text-xs uppercase tracking-wider rounded-md transition-all cursor-pointer"
+                      >
+                        <Sparkles className="w-3.5 h-3.5 text-[#C9A96E]" />
+                        <span>{lang === 'ID' ? 'Sunting Biodata' : 'Edit Bio & Role'}</span>
                       </button>
                     </div>
+                  )}
+
+                  {/* Bottom Name & Role Overlay */}
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <h3
+                      className="font-serif text-xl sm:text-2xl font-light text-[#FDFBF7] tracking-wide"
+                      style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
+                    >
+                      {member.name}
+                    </h3>
+                    <p className="text-xs uppercase tracking-[0.2em] text-[#C9A96E] font-medium mt-1">
+                      {lang === 'ID' ? member.roleId : member.roleEn}
+                    </p>
                   </div>
                 </div>
-              ))}
-            </div>
 
-            {/* Back to story button */}
-            <div className="mt-16 text-center">
-              <button
-                type="button"
-                onClick={() => {
-                  setViewMode('story');
-                  const aboutEl = document.getElementById('about');
-                  if (aboutEl) aboutEl.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="inline-flex items-center gap-2.5 px-6 py-3 bg-transparent hover:bg-[#C9A96E]/10 text-[#111816] hover:text-[#C9A96E] border border-[#C9A96E] text-xs font-semibold uppercase tracking-[0.18em] rounded-sm transition-all duration-300 shadow-xs cursor-pointer group"
-              >
-                <ArrowLeft className="w-4 h-4 text-[#C9A96E] group-hover:-translate-x-1.5 transition-transform duration-300" />
-                <span>{lang === 'ID' ? '← Kembali ke Tentang Kami' : '← Back to About Us'}</span>
-              </button>
+                {/* Member Details */}
+                <div className="p-6">
+                  {/* Badge */}
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#111816] border border-[#C9A96E]/30 rounded-sm mb-4">
+                    <Sparkles className="w-3 h-3 text-[#C9A96E]" />
+                    <span className="text-[11px] font-medium tracking-wide text-[#E8DCC4]">
+                      {lang === 'ID' ? member.badgeId : member.badgeEn}
+                    </span>
+                  </div>
+
+                  {/* Bio */}
+                  <p className="text-xs text-[#C4BDB2] font-light leading-relaxed mb-5">
+                    {lang === 'ID' ? member.bioId : member.bioEn}
+                  </p>
+
+                  {/* Directorial Specialties */}
+                  <div className="space-y-1.5 pt-4 border-t border-white/10 mb-5">
+                    <span className="text-[10px] uppercase tracking-widest text-[#C9A96E] font-semibold block mb-2">
+                      {lang === 'ID' ? 'Fokus Keahlian Utama' : 'Core Directorial Focus'}
+                    </span>
+                    {(lang === 'ID' ? member.specialtiesId : member.specialtiesEn).map(
+                      (spec, sIdx) => (
+                        <div
+                          key={sIdx}
+                          className="flex items-center gap-2 text-[11px] text-[#A89E90]"
+                        >
+                          <div className="w-1 h-1 rounded-full bg-[#C9A96E]" />
+                          <span>{spec}</span>
+                        </div>
+                      )
+                    )}
+                  </div>
+
+                  {/* Philosophy Quote */}
+                  {member.quoteId && (
+                    <div className="p-3.5 bg-[#111816]/70 border-l-2 border-[#C9A96E] text-xs font-serif italic text-[#D4CDC3] leading-relaxed">
+                      "{lang === 'ID' ? member.quoteId : member.quoteEn}"
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Card Footer */}
+              <div className="p-6 pt-0 flex items-center justify-between border-t border-white/5 mt-4">
+                <div className="flex items-center gap-2 pt-4">
+                  {member.instagram && (
+                    <a
+                      href={member.instagram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-1.5 rounded-full bg-white/5 hover:bg-[#C9A96E] text-gray-400 hover:text-[#111816] transition-colors"
+                      title="Instagram Studio"
+                    >
+                      <Instagram className="w-3.5 h-3.5" />
+                    </a>
+                  )}
+                  {member.email && (
+                    <a
+                      href={`mailto:${member.email}`}
+                      className="p-1.5 rounded-full bg-white/5 hover:bg-[#C9A96E] text-gray-400 hover:text-[#111816] transition-colors"
+                      title={member.email}
+                    >
+                      <Mail className="w-3.5 h-3.5" />
+                    </a>
+                  )}
+                </div>
+
+                <div className="pt-4">
+                  <button
+                    type="button"
+                    onClick={(e) => triggerUploadForMember(member.id, e)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#111816] hover:bg-[#C9A96E] text-[#D4CDC3] hover:text-[#111816] border border-[#C9A96E]/30 rounded text-[11px] font-medium tracking-wide transition-all cursor-pointer"
+                  >
+                    <Camera className="w-3 h-3 text-[#C9A96E]" />
+                    <span>{lang === 'ID' ? 'Ganti Foto' : 'Change Photo'}</span>
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-        )}
+          ))}
+        </div>
       </div>
 
       {/* ─── DEDICATED PHOTO PREVIEW & CONFIRMATION MODAL ─── */}
@@ -1011,7 +910,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
               {uploadStatus === 'success' && (
                 <div className="p-3 bg-emerald-950/70 border border-emerald-500/50 rounded flex items-center gap-2 text-xs text-emerald-300">
                   <CheckCircle2 className="w-4 h-4" />
-                  <span>{lang === 'ID' ? 'Foto berhasil disimpan.' : 'Photo saved successfully.'}</span>
+                  <span>{lang === 'ID' ? 'Foto profil berhasil disimpan.' : 'Photo saved successfully.'}</span>
                 </div>
               )}
 
@@ -1021,24 +920,24 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                     <AlertCircle className="w-4 h-4 mt-0.5 text-red-400 flex-shrink-0" />
                     <div className="space-y-1">
                       <p className="font-semibold text-red-300">
-                        {lang === 'ID' ? 'Koneksi Firebase Storage Gagal' : 'Firebase Storage Connection Failed'}
+                        {lang === 'ID' ? 'Koneksi Supabase Terkendala' : 'Supabase Operation Failed'}
                       </p>
                       <p className="font-mono text-[11px] leading-relaxed text-red-200 break-words">
-                        {uploadError || 'Connection to Firebase Storage bucket timed out or failed.'}
+                        {uploadError || 'Operation failed. Please check connection.'}
                       </p>
                     </div>
                   </div>
 
                   <div className="pt-2 border-t border-red-500/30 flex items-center justify-between gap-2">
                     <span className="text-[10px] text-gray-400">
-                      {lang === 'ID' ? 'Coba kirim ulang ke Storage Bucket?' : 'Retry upload to Storage Bucket?'}
+                      {lang === 'ID' ? 'Coba simpan ulang ke Supabase?' : 'Retry save to Supabase?'}
                     </span>
                     <button
                       type="button"
                       onClick={handleSavePendingPhoto}
                       className="px-3.5 py-1.5 bg-[#C9A96E] hover:bg-[#B8985D] text-[#111816] font-bold text-[11px] uppercase tracking-wider rounded transition-colors cursor-pointer"
                     >
-                      {lang === 'ID' ? 'Coba Lagi' : 'Retry Upload'}
+                      {lang === 'ID' ? 'Coba Lagi' : 'Retry Save'}
                     </button>
                   </div>
                 </div>
@@ -1135,7 +1034,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
               <div className="flex items-center justify-between gap-3 pt-3 border-t border-white/10">
                 <button
                   type="button"
-                  id="btn-cancel-pending-photo"
+                  id="team-btn-cancel-pending-photo"
                   onClick={handleCancelPendingPhoto}
                   disabled={uploadStatus === 'uploading' || uploadStatus === 'saving'}
                   className="px-4 py-2.5 bg-transparent hover:bg-white/5 text-gray-300 rounded text-xs font-semibold uppercase tracking-wider transition-colors disabled:opacity-50 cursor-pointer"
@@ -1145,7 +1044,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
 
                 <button
                   type="button"
-                  id="btn-save-pending-photo"
+                  id="team-btn-save-pending-photo"
                   onClick={handleSavePendingPhoto}
                   disabled={uploadStatus === 'preparing' || uploadStatus === 'uploading' || uploadStatus === 'saving' || uploadStatus === 'success'}
                   className="px-5 py-2.5 bg-[#C9A96E] hover:bg-[#B8985D] disabled:opacity-50 text-[#111816] font-bold text-xs uppercase tracking-wider rounded-sm shadow-lg transition-all cursor-pointer flex items-center gap-2"
@@ -1191,7 +1090,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
       {/* ─── Edit Modal for Team Member Details ─── */}
       {editingMember && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto animate-fadeIn">
-          <div className="bg-[#111816] text-[#FDFBF7] border border-[#C9A96E]/50 rounded-lg max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative my-8">
+          <div className="bg-[#1A2421] text-[#FDFBF7] border border-[#C9A96E]/50 rounded-lg max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative my-8">
             <button
               onClick={() => setEditingMember(null)}
               className="absolute top-5 right-5 text-gray-400 hover:text-white transition-colors"
@@ -1230,7 +1129,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                   onChange={(e) =>
                     setEditingMember({ ...editingMember, name: e.target.value })
                   }
-                  className="w-full bg-[#1A2421] border border-white/20 rounded px-3 py-2 text-white focus:outline-none focus:border-[#C9A96E]"
+                  className="w-full bg-[#111816] border border-white/20 rounded px-3 py-2 text-white focus:outline-none focus:border-[#C9A96E]"
                   required
                 />
               </div>
@@ -1246,7 +1145,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                     onChange={(e) =>
                       setEditingMember({ ...editingMember, roleId: e.target.value })
                     }
-                    className="w-full bg-[#1A2421] border border-white/20 rounded px-3 py-2 text-white focus:outline-none focus:border-[#C9A96E]"
+                    className="w-full bg-[#111816] border border-white/20 rounded px-3 py-2 text-white focus:outline-none focus:border-[#C9A96E]"
                     required
                   />
                 </div>
@@ -1260,7 +1159,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                     onChange={(e) =>
                       setEditingMember({ ...editingMember, roleEn: e.target.value })
                     }
-                    className="w-full bg-[#1A2421] border border-white/20 rounded px-3 py-2 text-white focus:outline-none focus:border-[#C9A96E]"
+                    className="w-full bg-[#111816] border border-white/20 rounded px-3 py-2 text-white focus:outline-none focus:border-[#C9A96E]"
                     required
                   />
                 </div>
@@ -1276,7 +1175,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                   onChange={(e) =>
                     setEditingMember({ ...editingMember, bioId: e.target.value })
                   }
-                  className="w-full bg-[#1A2421] border border-white/20 rounded px-3 py-2 text-white focus:outline-none focus:border-[#C9A96E]"
+                  className="w-full bg-[#111816] border border-white/20 rounded px-3 py-2 text-white focus:outline-none focus:border-[#C9A96E]"
                   required
                 />
               </div>
@@ -1291,32 +1190,8 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                   onChange={(e) =>
                     setEditingMember({ ...editingMember, quoteId: e.target.value })
                   }
-                  className="w-full bg-[#1A2421] border border-white/20 rounded px-3 py-2 text-white focus:outline-none focus:border-[#C9A96E]"
+                  className="w-full bg-[#111816] border border-white/20 rounded px-3 py-2 text-white focus:outline-none focus:border-[#C9A96E]"
                 />
-              </div>
-
-              <div>
-                <label className="block text-[#C9A96E] uppercase tracking-wider font-semibold mb-1">
-                  {lang === 'ID' ? 'Foto Profil (Unggah File)' : 'Profile Photo (Upload File)'}
-                </label>
-                <div className="flex items-center gap-3 bg-[#1A2421] border border-white/20 rounded p-2.5">
-                  {editingMember.imageUrl && (
-                    <img
-                      src={editingMember.imageUrl}
-                      alt="Preview"
-                      referrerPolicy="no-referrer"
-                      className="w-12 h-12 rounded object-cover border border-[#C9A96E]/50 flex-shrink-0"
-                    />
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => triggerUploadForMember(editingMember.id)}
-                    className="inline-flex items-center gap-2 px-3 py-2 bg-[#C9A96E] hover:bg-[#B8985D] text-[#111816] rounded text-xs font-bold uppercase tracking-wider cursor-pointer"
-                  >
-                    <Upload className="w-3.5 h-3.5" />
-                    <span>{lang === 'ID' ? 'Pilih Foto dari Komputer' : 'Choose Local File'}</span>
-                  </button>
-                </div>
               </div>
 
               <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/10">

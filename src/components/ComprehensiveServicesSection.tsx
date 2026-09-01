@@ -87,6 +87,37 @@ export const ComprehensiveServicesSection: React.FC<ComprehensiveServicesSection
           })}
         </div>
 
+        {/* Curated Artisan Partners Quick Spotlight Bar */}
+        <div className="mt-12 p-6 sm:p-8 bg-white border border-[#E5E1D8] rounded-xl flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-full bg-[#1A2421] text-[#C9A96E] flex items-center justify-center shrink-0 border border-[#C9A96E]/30">
+              <Sparkles className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#C9A96E] bg-[#F7F4EE] px-2.5 py-0.5 rounded-full border border-[#E5E1D8]">
+                  {lang === 'ID' ? 'KOLABORASI RESMI' : 'OFFICIAL COLLABORATIONS'}
+                </span>
+                <span className="text-xs text-[#888888] font-light">Cosma Florist • Ayu Hairstylist</span>
+              </div>
+              <h4 className="text-base sm:text-lg font-serif text-[#222222] font-medium mt-1">
+                {lang === 'ID'
+                  ? 'Didukung oleh Artisan Terbaik di Industri Pernikahan Mewah'
+                  : 'Empowered by Renowned Master Artisans in Luxury Weddings'}
+              </h4>
+            </div>
+          </div>
+
+          <a
+            id="services-view-partners-btn"
+            href="#partners"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#1A2421] hover:bg-[#25332f] text-[#FDFBF7] text-xs font-semibold uppercase tracking-wider rounded-md transition-all shadow-md shrink-0 hover:scale-105"
+          >
+            <span>{lang === 'ID' ? 'Lihat Profil & Portofolio Artisan' : 'View Artisan Portfolios'}</span>
+            <span className="text-[#C9A96E]">→</span>
+          </a>
+        </div>
+
       </div>
     </section>
   );
