@@ -4,23 +4,47 @@
   --font-serif: "Playfair Display", Georgia, "Times New Roman", serif;
   --font-display: "Cinzel", "Playfair Display", Georgia, serif;
   --font-sans: "Montserrat", Arial, system-ui, -apple-system, sans-serif;
-  
+
+  /* Keep the v4 theme names aligned with utilities used by the pages. */
   --color-cream: #FDFBF7;
   --color-panel: #F7F4EE;
   --color-border-prestige: #E5E1D8;
   --color-gold: #C9A96E;
+  --color-champagne: #C9A96E;
   --color-gold-hover: #B8985D;
   --color-gold-light: #E0CFA4;
   --color-gold-dark: #A58448;
-  --color-charcoal: #222222;
+  --color-ivory: #F9F7F4;
+  --color-beige: #E5E1D8;
+  --color-charcoal: #1A2421;
   --color-charcoal-light: #4A4A4A;
+
+  --shadow-luxe: 0 20px 60px rgba(26, 36, 33, 0.12);
 }
 
 @layer base {
+  :root {
+    color-scheme: light;
+    background: #FDFBF7;
+  }
+
+  html {
+    min-width: 320px;
+    background: #FDFBF7;
+  }
+
   body {
+    min-width: 320px;
+    min-height: 100vh;
     font-family: var(--font-sans);
     background-color: #FDFBF7;
-    color: #222222;
+    color: #1A2421;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  #root {
+    min-height: 100vh;
   }
 
   h1, h2, h3, h4, .serif {
@@ -66,4 +90,3 @@
 .prestige-card:hover {
   box-shadow: 0 20px 35px -10px rgba(34, 34, 34, 0.08);
 }
-
