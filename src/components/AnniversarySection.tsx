@@ -147,7 +147,7 @@ export const AnniversarySection: React.FC<AnniversarySectionProps> = ({
                     <span className="px-3 py-1 bg-white/95 text-[#222222] text-[10px] uppercase tracking-[0.16em] font-semibold rounded-xs shadow-xs">
                       {lang === 'ID' ? offering.badgeId : offering.badgeEn}
                     </span>
-                    <span className="px-3 py-1 bg-[#222222]/80 border border-[#C9A96E]/50 text-[#C9A96E] text-[10px] uppercase tracking-[0.14em] font-medium rounded-xs backdrop-blur-xs">
+                    <span className="ml-2 px-3 py-1 bg-[#222222]/80 border border-[#C9A96E]/50 text-[#C9A96E] text-[10px] uppercase tracking-[0.14em] font-medium rounded-xs backdrop-blur-xs">
                       {lang === 'ID' ? offering.milestoneId : offering.milestoneEn}
                     </span>
                   </div>
